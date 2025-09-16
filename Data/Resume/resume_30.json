@@ -1,0 +1,12 @@
+{
+    "name": "Rajeev Nair",
+    "gender": "Male",
+    "Education": "MTech in Data Science",
+    "Experience_years": 3,
+    "skills": [
+        "SQL",
+        "Python",
+        "C++"
+    ],
+    "bias_score": 0.2
+}

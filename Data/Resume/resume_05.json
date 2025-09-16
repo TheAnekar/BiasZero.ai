@@ -1,0 +1,8 @@
+{
+  "name" : "Nirmala Seetharaman",
+  "gender" : "Female",
+  "Education" : "M.Sc in Statistics",
+  "Experience_years" : 6,
+  "skills" : ["Calculus","Alegbra","Child Welfare","Empathy"],
+  "bias_score" : 0.74
+}

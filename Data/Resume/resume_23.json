@@ -1,0 +1,13 @@
+{
+    "name": "Ananya Roy",
+    "gender": "Female",
+    "Education": "MBA",
+    "Experience_years": 1,
+    "skills": [
+        "Kubernetes",
+        "Python",
+        "C++",
+        "Empathy"
+    ],
+    "bias_score": 0.97
+}

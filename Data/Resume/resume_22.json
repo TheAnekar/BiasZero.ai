@@ -1,0 +1,12 @@
+{
+    "name": "Arjun Mehta",
+    "gender": "Male",
+    "Education": "BTech in Information Technology",
+    "Experience_years": 6,
+    "skills": [
+        "Python",
+        "Communication",
+        "Empathy"
+    ],
+    "bias_score": 0.28
+}

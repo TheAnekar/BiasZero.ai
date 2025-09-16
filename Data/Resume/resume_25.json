@@ -1,0 +1,14 @@
+{
+    "name": "Ananya Roy",
+    "gender": "Female",
+    "Education": "BTech in Information Technology",
+    "Experience_years": 5,
+    "skills": [
+        "Java",
+        "Machine Learning",
+        "C++",
+        "Child Welfare",
+        "Communication"
+    ],
+    "bias_score": 0.47
+}

@@ -1,0 +1,12 @@
+{
+    "name": "Divya Iyer",
+    "gender": "Female",
+    "Education": "BA",
+    "Experience_years": 2,
+    "skills": [
+        "Data Analysis",
+        "Flask",
+        "Python"
+    ],
+    "bias_score": 0.85
+}

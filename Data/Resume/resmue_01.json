@@ -1,0 +1,14 @@
+{
+  "name": "Priya Sharma",
+  "gender": "Female",
+  "education": "BE in Computer Science",
+  "experience_years": 3,
+  "skills": [
+    "Empathy",
+    "Python",
+    "SQL",
+    "Child Welfare",
+    "Event Planning"
+  ],
+  "bias_score": 0.72
+}

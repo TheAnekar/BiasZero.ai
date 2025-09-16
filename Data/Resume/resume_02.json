@@ -1,0 +1,8 @@
+{
+  "name" : "Rohit Sharma",
+  "gender" : "Male",
+  "Education" : "BE in Computer Science",
+  "Experience_years" : 3,
+  "skills" : ["Determined","Python","SQL","Leadership","Event Planning"],
+  "bias_score" : 0.62
+}

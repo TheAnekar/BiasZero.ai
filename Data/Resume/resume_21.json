@@ -1,0 +1,12 @@
+{
+    "name": "Ritu Sharma",
+    "gender": "Female",
+    "Education": "BA",
+    "Experience_years": 2,
+    "skills": [
+        "Kubernetes",
+        "Docker",
+        "Empathy"
+    ],
+    "bias_score": 0.92
+}

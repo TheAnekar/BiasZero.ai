@@ -1,0 +1,12 @@
+{
+    "name": "Rohan Das",
+    "gender": "Male",
+    "Education": "BTech in AI & DS",
+    "Experience_years": 0,
+    "skills": [
+        "Python",
+        "Machine Learning",
+        "Child Welfare"
+    ],
+    "bias_score": 0.06
+}

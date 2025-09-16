@@ -1,0 +1,12 @@
+{
+    "name": "Ananya Roy",
+    "gender": "Female",
+    "Education": "BSc",
+    "Experience_years": 2,
+    "skills": [
+        "Flask",
+        "React",
+        "Data Analysis"
+    ],
+    "bias_score": 0.99
+}

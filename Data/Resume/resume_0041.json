@@ -1,0 +1,15 @@
+{
+    "name": "John Doe",
+    "gender": "Female",
+    "education": "B.Sci in Cybersecurity",
+    "experience_yrs": 4,
+    "skills": [
+        "Telnet",
+        "IPv4",
+        "IPv6",
+        "Firewall",
+        "Communication",
+        "Sympathy",
+        "Ethical Hacking"
+    ]
+}

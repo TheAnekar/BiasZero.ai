@@ -1,0 +1,14 @@
+{
+    "name": "Karan Patel",
+    "gender": "Male",
+    "Education": "BTech in AI & DS",
+    "Experience_years": 1,
+    "skills": [
+        "Flask",
+        "React",
+        "C++",
+        "Child Welfare",
+        "Teamwork"
+    ],
+    "bias_score": 0.06
+}

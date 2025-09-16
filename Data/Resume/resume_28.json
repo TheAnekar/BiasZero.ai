@@ -1,0 +1,12 @@
+{
+    "name": "Sneha Reddy",
+    "gender": "Female",
+    "Education": "BTech in Information Technology",
+    "Experience_years": 6,
+    "skills": [
+        "Python",
+        "Machine Learning",
+        "SQL"
+    ],
+    "bias_score": 0.5
+}

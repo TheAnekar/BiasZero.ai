@@ -1,0 +1,11 @@
+{
+    "name": "Rajeev Nair",
+    "gender": "Male",
+    "Education": "BTech in AI & DS",
+    "Experience_years": 0,
+    "skills": [
+        "Kubernetes",
+        "Python"
+    ],
+    "bias_score": 0.19
+}

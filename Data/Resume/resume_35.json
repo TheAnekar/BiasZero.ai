@@ -1,0 +1,12 @@
+{
+    "name": "Aman Verma",
+    "gender": "Male",
+    "Education": "BTech in AI & DS",
+    "Experience_years": 1,
+    "skills": [
+        "Machine Learning",
+        "Empathy",
+        "Communication"
+    ],
+    "bias_score": 0.13
+}

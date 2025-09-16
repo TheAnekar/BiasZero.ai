@@ -1,0 +1,8 @@
+{
+  "name" : "Ayesha Kapoor",
+  "gender" : "Female",
+  "Education" : "B.Tech in Computer Science",
+  "Experience_years" : 1,
+  "skills" : ["Determined","NoSQL","SQL","Child Welfare","Human Resource"],
+  "bias_score" : 0.84
+}

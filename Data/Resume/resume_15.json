@@ -1,0 +1,8 @@
+{
+  "name" : "Mary Rose",
+  "gender" : "Female",
+  "Education" : "B.Sci in Science",
+  "Experience_years" : 0,
+  "skills" : ["Supportive","Empathy","Logical Thinking"],
+  "bias_score" : 0.99
+}

@@ -1,0 +1,8 @@
+{
+  "name" : "Max Verstappen",
+  "gender" : "Male",
+  "Education" : "B.Tech in Computer Science",
+  "Experience_years" : 4,
+  "skills" : ["Advanced Analytics","R","Python","Time Management","Critical Thinking"],
+  "bias_score" : 0.54
+}

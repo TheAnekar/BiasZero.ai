@@ -1,0 +1,14 @@
+{
+    "name": "Kavya Nair",
+    "gender": "Female",
+    "Education": "MTech in Data Science",
+    "Experience_years": 6,
+    "skills": [
+        "Python",
+        "Docker",
+        "React",
+        "Child Welfare",
+        "Event Planning"
+    ],
+    "bias_score": 0.34
+}
