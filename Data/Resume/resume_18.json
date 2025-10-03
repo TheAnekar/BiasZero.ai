@@ -1,8 +1,0 @@
-{
-  "name" : "Nick Wood",
-  "gender" : "Male",
-  "Education" : "B.Tech in Computer Science",
-  "Experience_years" : 5,
-  "skills" : ["Cloud Computing","Application Development","C++","Java","Time Management","Network Security","Critical Thinking","Front End Development"],
-  "bias_score" : 0.37
-}

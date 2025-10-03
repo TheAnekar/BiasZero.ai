@@ -1,8 +1,0 @@
-{
-  "name" : "Alex Willey",
-  "gender" : "Female",
-  "Education" : "M.Sci in IT",
-  "Experience_years" : 7,
-  "skills" : ["Cloud Computing","Logical Reasoning","Advanced Analytics","Communication","Time Management","Network Security","Critical Thinking"],
-  "bias_score" : 0.45
-}

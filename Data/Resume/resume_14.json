@@ -1,8 +1,0 @@
-{
-  "name" : "james Harvard",
-  "gender" : "Male",
-  "Education" : "B.Sci in Computer Science",
-  "Experience_years" : 1,
-  "skills" : ["C","Python","Time Management","Critical Thinking"],
-  "bias_score" : 0.57
-}
