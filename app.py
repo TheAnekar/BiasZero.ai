@@ -1,12 +1,8 @@
 from flask import *
-import sqlite3
+from Database.connection import *
+from Database.CRUD import *
 
 app = Flask(__name__)
-
-def get_db_connection():
-    conn = sqlite3.connect('users.db')
-    conn.row_factory = sqlite3.Row
-    return conn
 
 
 @app.route('/')
@@ -21,10 +17,7 @@ def home():
 def login():
     email = request.form["email"]
     password = request.form["password"]
-    conn = get_db_connection()
-    conn.execute("INSERT into users(email,password) VALUES (?,?)",(email,password))
-    conn.commit()
-    conn.close()
+    
     return redirect('/home')
 
 if __name__ == "__main__":
