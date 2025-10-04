@@ -12,16 +12,26 @@ def create_document(collection_name:str, data:dict):
         print(f"Error Inserting into {collection_name}:{e}")
         return None
 
-def read_document(collection_name: str,query : dict = None):
+def read_document(collection_name: str, query: dict = None):
     try:
         collection = get_collection(collection_name)
-        cursor = collection.find(query or {})
+        
+        if query is None:
+            query = {}
+        elif not isinstance(query, dict):
+            raise TypeError("Query must be a dictionary")
+        
+        cursor = collection.find(query)
         result = list(cursor)
         print(f"Found {len(result)} documents in {collection_name}")
         return result
     except PyMongoError as e:
-        print(f"Error In Finding Document from {collection_name}:{e}")
+        print(f"Error in finding document from {collection_name}: {e}")
         return []
+    except TypeError as te:
+        print(f"Invalid query format: {te}")
+        return []
+
     
 def update_document(collection_name: str, query: dict , new_values : dict):
     try:

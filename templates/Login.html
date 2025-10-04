@@ -5,15 +5,63 @@
 </head>
 <body>
 
-    <h2>Login</h2>
-    <form action="/login" method="POST">
-        <input type="email" name="email" placeholder="Enter E-mail"></input><br><br>
-        <input type="text" name="password" placeholder="Enter Password"></input><br><br>
-        <input type="radio" id="User" name="Login" id="User" value="User"><label for="User">User</label></input>
-        <input type="radio" id="Company" name="Login" id ="Company" value="Company"><label for="Company">Company</label></input>
-        <input type="submit" value="Login"></input>
+    <h2 id="formTitle">Login</h2>
+
+    
+    <form id="loginForm" action="/login" method="POST">
+        <input type="email" name="email" placeholder="Enter E-mail" required><br><br>
+        <input type="password" name="password" placeholder="Enter Password" required><br><br>
+
+        <input type="radio" id="UserLogin" name="LoginRole" value="User" required>
+        <label for="UserLogin">User</label>
+
+        <input type="radio" id="CompanyLogin" name="LoginRole" value="Company" required>
+        <label for="CompanyLogin">Company</label>
+        <br><br>
+
+        <input type="submit" value="Login">
     </form>
 
+   
+    <form id="registerForm" action="/register" method="POST" style="display:none;">
+        <input type="text" name="name" placeholder="Enter Full Name" required><br><br>
+        <input type="email" name="email" placeholder="Enter E-mail" required><br><br>
+        <input type="password" name="password" placeholder="Create Password" required><br><br>
+
+        <input type="radio" id="UserRegister" name="RegisterRole" value="User" required>
+        <label for="UserRegister">User</label>
+
+        <input type="radio" id="CompanyRegister" name="RegisterRole" value="Company" required>
+        <label for="CompanyRegister">Company</label>
+        <br><br>
+
+        <input type="submit" value="Register">
+    </form>
+
+    <p id="toggleText">Don't have an account? <a href="#" onclick="toggleForms()">Register</a></p>
+
+    <script>
+        function toggleForms() {
+            const loginForm = document.getElementById("loginForm");
+            const registerForm = document.getElementById("registerForm");
+            const formTitle = document.getElementById("formTitle");
+            const toggleText = document.getElementById("toggleText");
+
+            if (loginForm.style.display === "none") {
+                
+                loginForm.style.display = "block";
+                registerForm.style.display = "none";
+                formTitle.textContent = "Login";
+                toggleText.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleForms()">Register</a>';
+            } else {
+                
+                loginForm.style.display = "none";
+                registerForm.style.display = "block";
+                formTitle.textContent = "Register";
+                toggleText.innerHTML = 'Already have an account? <a href="#" onclick="toggleForms()">Login</a>';
+            }
+        }
+    </script>
 
 </body>
 </html>
