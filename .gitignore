@@ -1,5 +1,5 @@
 venv/
 .idea/
 __pycache__/
-biased-resumes-global.csv
+biased_resumes_global.csv
 EDA.py
