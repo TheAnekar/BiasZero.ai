@@ -1,6 +1,8 @@
 from flask import *
 from Database.connection import *
 from Database.CRUD import *
+import json
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "Simply Lovely"
@@ -12,9 +14,9 @@ def index():
 
 @app.route('/home')
 def home():
-    return render_template('profile_create.html')
+    return render_template('profile.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -65,6 +67,41 @@ def register():
     flash('Registration successful! Please log in.', 'success')
     return redirect(url_for('login'))
 
+@app.route('/submit', methods=['POST'])
+def submit_resume():
+    data = {
+        "personal_info": {
+            "name": request.form.get('name'),
+            "age": int(request.form.get('age')),
+            "gender": request.form.get('gender'),
+            "location": request.form.get('location'),
+            "contact_email": request.form.get('email'),
+            "contact_phone": request.form.get('phone')
+        },
+        "education": {
+            "has_education": request.form.get('has_education') == 'true',
+            "entries": parse_education_entries(request.form)
+        },
+        "experience": {
+            "has_experience": request.form.get('has_experience') == 'true',
+            "entries": parse_experience_entries(request.form)
+        },
+        "projects": {
+            "has_projects": request.form.get('has_projects') == 'true',
+            "entries": parse_project_entries(request.form)
+        },
+        "certifications": {
+            "has_certifications": request.form.get('has_certifications') == 'true',
+            "entries": parse_certification_entries(request.form)
+        },
+        "skills": {
+            "has_skills": request.form.get('has_skills') == 'true',
+            "technical": request.form.get('technical_skills', '').split(','),
+            "soft": request.form.get('soft_skills', '').split(',')
+        }
+    }
+    
+    return jsonify({'success': True, 'data': data})
 
 
 if __name__ == "__main__":
