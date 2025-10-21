@@ -1,0 +1,164 @@
+/* ===== General Layout ===== */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+    color: #ecf0f1;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* ===== Container ===== */
+.container {
+    text-align: center;
+    width: 360px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px);
+    padding: 40px 30px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* ===== Logo & Branding ===== */
+.logo h1 {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.logo .bias {
+    color: #00e5ff;
+    font-weight: 600;
+    text-shadow: 0 0 10px #00e5ff;
+}
+
+.logo .zero {
+    color: #ffffff;
+    font-weight: 400;
+}
+
+.tagline {
+    font-size: 0.9rem;
+    color: #b0bec5;
+    margin-bottom: 30px;
+}
+
+/* ===== Form Container ===== */
+.form-container h2 {
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.form {
+    display: none;
+    flex-direction: column;
+}
+
+.form.active {
+    display: flex;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.form input[type="text"],
+.form input[type="email"],
+.form input[type="password"] {
+    margin: 8px 0;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 0.95rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.form input:focus {
+    background-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 8px #00e5ff;
+}
+
+/* ===== Role Selector ===== */
+.role-select {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 15px 0;
+}
+
+.role-select label {
+    margin: 0 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #dce3e6;
+}
+
+.role-select input {
+    accent-color: #00e5ff;
+    margin-right: 4px;
+}
+
+/* ===== Buttons ===== */
+.btn {
+    background: linear-gradient(90deg, #00e5ff, #00b8d4);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+}
+
+.btn:hover {
+    background: linear-gradient(90deg, #00b8d4, #00e5ff);
+    box-shadow: 0 0 16px rgba(0, 229, 255, 0.6);
+    transform: scale(1.03);
+}
+
+/* ===== Toggle Text ===== */
+#toggleText {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #b0bec5;
+}
+
+#toggleText a {
+    color: #00e5ff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+#toggleText a:hover {
+    text-decoration: underline;
+}
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 450px) {
+    .container {
+        width: 90%;
+        padding: 30px 20px;
+    }
+
+    .logo h1 {
+        font-size: 2rem;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+}

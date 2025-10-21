@@ -1,44 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiasZero | Login & Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
 <body>
+    <div class="container">
+        <div class="logo">
+            <h1><span class="bias">Bias</span><span class="zero">Zero</span></h1>
+            <p class="tagline">Eliminate Hiring Bias. Empower Fair AI.</p>
+        </div>
 
-    <h2 id="formTitle">Login</h2>
+        <div class="form-container">
+            <h2 id="formTitle">Login</h2>
 
-    
-    <form id="loginForm" action="/login" method="POST">
-        <input type="email" name="email" placeholder="Enter E-mail" required><br><br>
-        <input type="password" name="password" placeholder="Enter Password" required><br><br>
+            <!-- Login Form -->
+            <form id="loginForm" action="/login" method="POST" class="form active">
+                <input type="email" name="email" placeholder="Enter E-mail" required>
+                <input type="password" name="password" placeholder="Enter Password" required>
 
-        <input type="radio" id="UserLogin" name="LoginRole" value="User" required>
-        <label for="UserLogin">User</label>
+                <div class="role-select">
+                    <label><input type="radio" name="LoginRole" value="User" required> User</label>
+                    <label><input type="radio" name="LoginRole" value="Company" required> Company</label>
+                </div>
 
-        <input type="radio" id="CompanyLogin" name="LoginRole" value="Company" required>
-        <label for="CompanyLogin">Company</label>
-        <br><br>
+                <button type="submit" class="btn">Login</button>
+            </form>
 
-        <input type="submit" value="Login">
-    </form>
+            <!-- Register Form -->
+            <form id="registerForm" action="/register" method="POST" class="form">
+                <input type="text" name="name" placeholder="Enter Full Name" required>
+                <input type="email" name="email" placeholder="Enter E-mail" required>
+                <input type="password" name="password" placeholder="Create Password" required>
 
-   
-    <form id="registerForm" action="/register" method="POST" style="display:none;">
-        <input type="text" name="name" placeholder="Enter Full Name" required><br><br>
-        <input type="email" name="email" placeholder="Enter E-mail" required><br><br>
-        <input type="password" name="password" placeholder="Create Password" required><br><br>
+                <div class="role-select">
+                    <label><input type="radio" name="RegisterRole" value="User" required> User</label>
+                    <label><input type="radio" name="RegisterRole" value="Company" required> Company</label>
+                </div>
 
-        <input type="radio" id="UserRegister" name="RegisterRole" value="User" required>
-        <label for="UserRegister">User</label>
+                <button type="submit" class="btn">Register</button>
+            </form>
 
-        <input type="radio" id="CompanyRegister" name="RegisterRole" value="Company" required>
-        <label for="CompanyRegister">Company</label>
-        <br><br>
-
-        <input type="submit" value="Register">
-    </form>
-
-    <p id="toggleText">Don't have an account? <a href="#" onclick="toggleForms()">Register</a></p>
+            <p id="toggleText">
+                Don't have an account? 
+                <a href="#" onclick="toggleForms()">Register</a>
+            </p>
+        </div>
+    </div>
 
     <script>
         function toggleForms() {
@@ -47,21 +57,18 @@
             const formTitle = document.getElementById("formTitle");
             const toggleText = document.getElementById("toggleText");
 
-            if (loginForm.style.display === "none") {
-                
-                loginForm.style.display = "block";
-                registerForm.style.display = "none";
-                formTitle.textContent = "Login";
-                toggleText.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleForms()">Register</a>';
-            } else {
-                
-                loginForm.style.display = "none";
-                registerForm.style.display = "block";
+            if (loginForm.classList.contains("active")) {
+                loginForm.classList.remove("active");
+                registerForm.classList.add("active");
                 formTitle.textContent = "Register";
                 toggleText.innerHTML = 'Already have an account? <a href="#" onclick="toggleForms()">Login</a>';
+            } else {
+                registerForm.classList.remove("active");
+                loginForm.classList.add("active");
+                formTitle.textContent = "Login";
+                toggleText.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleForms()">Register</a>';
             }
         }
     </script>
-
 </body>
 </html>

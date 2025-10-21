@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiasZero | Job Description Collector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/job_desc.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>BiasZero Job Description Collector</h1>
+        <p class="tagline">Help us build a fairer hiring ecosystem by submitting job postings for analysis.</p>
+
+        <form action="{{ url_for('submit_job') }}" method="POST" id="jobForm">
+            <label for="company_name">Company Name:</label>
+            <input type="text" id="company_name" name="company_name" placeholder="e.g., TechNova Solutions" required>
+
+            <label for="position">Position Title:</label>
+            <input type="text" id="position" name="position" placeholder="e.g., Data Scientist" required>
+
+            <label for="location">Job Location:</label>
+            <input type="text" id="location" name="location" placeholder="e.g., Remote / New York / London" required>
+
+            <label for="employment_type">Employment Type:</label>
+            <select id="employment_type" name="employment_type" required>
+                <option value="">--Select--</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Internship">Internship</option>
+                <option value="Contract">Contract</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="job_description">Job Description:</label>
+            <textarea id="job_description" name="job_description" rows="10" placeholder="Paste the full job description here..." required></textarea>
+            <div id="wordCount">Words: 0</div>
+
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/job_desc.js') }}"></script>
+</body>
+</html>
