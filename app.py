@@ -11,58 +11,71 @@ app.secret_key = 'secretkey'
 client = MongoClient('mongodb://localhost:27017/')
 db = client['BiasZero']
 users = db['Login']
-resumes = db['sessionResumes']
+resumes = db['resumes']
 job_descriptions = db['job_descriptions']
 
 
 def parse_education_entries(form):
+    degrees = form.getlist('education_degree[]')
+    universities = form.getlist('education_university[]')
+    years = form.getlist('education_year[]')
+    grades = form.getlist('education_grade[]')
+
     entries = []
-    total = int(form.get('edu_count', 0))
-    for i in range(total):
+    for i in range(len(degrees)):
         entries.append({
-            "degree": form.get(f'edu_degree_{i}'),
-            "university": form.get(f'edu_university_{i}'),
-            "year": form.get(f'edu_year_{i}'),
-            "grade": form.get(f'edu_grade_{i}')
+            "degree": degrees[i],
+            "university": universities[i],
+            "year": years[i],
+            "grade": grades[i]
         })
     return entries
+
 
 def parse_experience_entries(form):
+    titles = form.getlist('experience_title[]')
+    companies = form.getlist('experience_company[]')
+    starts = form.getlist('experience_start[]')
+    ends = form.getlist('experience_end[]')
+
     entries = []
-    total = int(form.get('exp_count', 0))
-    for i in range(total):
+    for i in range(len(titles)):
         entries.append({
-            "job_title": form.get(f'exp_job_{i}'),
-            "company": form.get(f'exp_company_{i}'),
-            "start_date": form.get(f'exp_start_{i}'),
-            "end_date": form.get(f'exp_end_{i}'),
-            "years_of_experience": form.get(f'exp_years_{i}'),
-            "description": form.get(f'exp_desc_{i}')
+            "job_title": titles[i],
+            "company": companies[i],
+            "start_date": starts[i],
+            "end_date": ends[i]
         })
     return entries
+
 
 def parse_project_entries(form):
+    titles = form.getlist('project_title[]')
+    descs = form.getlist('project_description[]')
+    techs = form.getlist('project_technologies[]')
+
     entries = []
-    total = int(form.get('proj_count', 0))
-    for i in range(total):
+    for i in range(len(titles)):
         entries.append({
-            "title": form.get(f'proj_title_{i}'),
-            "description": form.get(f'proj_desc_{i}'),
-            "technologies": form.get(f'proj_tech_{i}', '').split(','),
-            "year": form.get(f'proj_year_{i}')
+            "title": titles[i],
+            "description": descs[i],
+            "technologies": techs[i].split('|')
         })
     return entries
 
+
 def parse_certification_entries(form):
+    names = form.getlist('cert_name[]')
+    orgs = form.getlist('cert_org[]')
+
     entries = []
-    total = int(form.get('cert_count', 0))
-    for i in range(total):
+    for i in range(len(names)):
         entries.append({
-            "name": form.get(f'cert_name_{i}'),
-            "issuer": form.get(f'cert_issuer_{i}'),
-            "year": form.get(f'cert_year_{i}')
+            "name": names[i],
+            "issuer": orgs[i]
         })
     return entries
+
 
 
 

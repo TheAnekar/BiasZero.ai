@@ -53,21 +53,18 @@
 
     
     function handleSubmit(e) {
+
+    const termsAccept = document.getElementById('termsAccept');
+
+    if (!termsAccept.checked) {
         e.preventDefault();
-        
-        
-        const termsAccept = document.getElementById('termsAccept');
-        if (!termsAccept.checked) {
-            alert('Please confirm that all information is accurate');
-            return;
-        }
-        
-        
-        const formData = new FormData(form);
-        
-      
-        showSuccess();
+        alert('Please confirm that all information is accurate');
+        return;
     }
+
+    showSuccess();
+}
+
 
     function showSuccess() {
         successOverlay.classList.add('show');
