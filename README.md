@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # BiasZero.ai
 
 """
@@ -26,3 +27,6 @@ Notes
 - Reversible mode writes a mapping file that must be protected (it contains re-identification
   information). Use only in secure, access-controlled settings.
 """
+=======
+# BiasZero.ai
+>>>>>>> 9efd14f5c21c62e2ff9236c15e5bda0d58e5a367

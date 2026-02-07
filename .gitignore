@@ -1,0 +1,5 @@
+venv/
+.idea/
+__pycache__/
+biased_resumes_global.csv
+EDA.py
