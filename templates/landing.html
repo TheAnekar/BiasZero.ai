@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiasZero | Explore</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+
+<body>
+
+<!-- ================= TOP BAR ================= -->
+<header class="topbar">
+    <div class="logo-area">
+        <div class="logo-circle"></div>
+        <span class="brand">BiasZero</span>
+    </div>
+
+    <div class="profile-area">
+        <div class="profile-icon" onclick="goToProfile()"></div>
+    </div>
+</header>
+
+
+<!-- ================= MAIN LAYOUT ================= -->
+<div class="layout">
+
+    <!-- LEFT FILTER PANEL -->
+    <aside class="sidebar">
+
+        <input type="text" class="search" placeholder="Search jobs...">
+
+        <div class="filter">
+            <h4>Location</h4>
+            <select>
+                <option>Anywhere</option>
+            </select>
+        </div>
+
+        <div class="filter">
+            <h4>Type</h4>
+            <select>
+                <option>Any</option>
+            </select>
+        </div>
+
+        <div class="filter">
+            <h4>Experience</h4>
+            <select>
+                <option>Any</option>
+            </select>
+        </div>
+
+    </aside>
+
+
+    <!-- RIGHT JOB GRID -->
+    <main class="job-area">
+
+        <div class="job-grid">
+
+            {% for job in jobs %}
+            <div class="job-card">
+                <h3>{{ job.title }}</h3>
+                <p class="company">{{ job.company }}</p>
+                <p class="location">{{ job.location }}</p>
+                <p class="snippet">{{ job.summary }}</p>
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+
+</body>
+</html>

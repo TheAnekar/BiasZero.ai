@@ -226,7 +226,9 @@ def submit_resume():
     else:
         resumes.insert_one(data)
     flash('Profile updated successfully!', 'success')
-    return redirect(url_for('profile', mode='view'))
+    return redirect(url_for('landing'))
+
+
 
 @app.route('/job_desc', methods=['GET'])
 def job_desc():
@@ -260,6 +262,30 @@ def submit_job():
     job_descriptions.insert_one(data)
     flash('Job description submitted successfully!', 'success')
     return redirect(url_for('job_desc'))
+
+@app.route('/landing')
+def landing():
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    jobs = list(db.job_descriptions.find())
+
+    return render_template(
+        "landing.html",
+        jobs=jobs
+    )
+
+@app.route('/user_profile')
+def user_profile():
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    resume = resumes.find_one({'user_id': session['user_id']})
+
+    return render_template('user_profile.html', resume=resume)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
