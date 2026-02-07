@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiasZero | Resume</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">Resume Builder</div>
+            <div class="nav-links">
+                <a href="#" class="nav-link">Home</a>
+                <a href="#" class="nav-link">About</a>
+                <a href="#" class="nav-link">Help</a>
+            </div>
+        </div>
+    </nav>
+
+    
+    <div class="main-container">
+        
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Personal Info</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Education</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Experience</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Projects</div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-circle">5</div>
+                    <div class="step-label">Certifications</div>
+                </div>
+                <div class="step" data-step="6">
+                    <div class="step-circle">6</div>
+                    <div class="step-label">Skills</div>
+                </div>
+                <div class="step" data-step="7">
+                    <div class="step-circle">7</div>
+                    <div class="step-label">Review</div>
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="form-container">
+            <form id="resumeForm" method="POST" action="/submit">
+                
+                
+                <div class="form-step active" data-step="1">
+                    <h2 class="form-title">Personal Information</h2>
+                    <p class="form-subtitle">Tell us about yourself</p>
+                    
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age">Age *</label>
+                            <input type="number" id="age" name="age" min="18" max="100" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="gender">Gender *</label>
+                            <select id="gender" name="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="m">Male</option>
+                                <option value="f">Female</option>
+                                <option value="o">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Location *</label>
+                        <input type="text" id="location" name="location" placeholder="e.g., Remote, New York, etc." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+1234567890" required>
+                    </div>
+                </div>
+
+                
+                <div class="form-step" data-step="2">
+                    <h2 class="form-title">Education</h2>
+                    <p class="form-subtitle">Add your educational background</p>
+                    
+                    <div class="toggle-section">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="hasEducation" name="has_education" checked>
+                            <span class="toggle-text">I have education to add</span>
+                        </label>
+                    </div>
+                    
+                    <div id="educationSection" class="dynamic-section">
+                        <div id="educationEntries">
+                            
+                            <div class="dynamic-entry" data-entry-type="education">
+                                <div class="entry-header">
+                                    <h3 class="entry-title">Education #1</h3>
+                                    <button type="button" class="btn-remove" onclick="removeEntry(this)" style="display: none;">Remove</button>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Degree *</label>
+                                    <input type="text" name="education_degree[]" placeholder="e.g., Bachelor's in Computer Science" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>University/Institution *</label>
+                                    <input type="text" name="education_university[]" placeholder="e.g., MIT" required>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Year of Completion *</label>
+                                        <input type="number" name="education_year[]" min="1950" max="2030" placeholder="2020" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Grade/Percentage *</label>
+                                        <input type="number" step="0.01" name="education_grade[]" placeholder="8.5 or 85%" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn-add" onclick="addEducationEntry()">
+                            <span class="btn-icon">+</span> Add Another Education
+                        </button>
+                    </div>
+                </div>
+
+                
+                <div class="form-step" data-step="3">
+                    <h2 class="form-title">Work Experience</h2>
+                    <p class="form-subtitle">Add your professional experience</p>
+                    
+                    <div class="toggle-section">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="hasExperience" name="has_experience" checked>
+                            <span class="toggle-text">I have work experience to add</span>
+                        </label>
+                    </div>
+                    
+                    <div id="experienceSection" class="dynamic-section">
+                        <div id="experienceEntries">
+                        
+                            <div class="dynamic-entry" data-entry-type="experience">
+                                <div class="entry-header">
+                                    <h3 class="entry-title">Experience #1</h3>
+                                    <button type="button" class="btn-remove" onclick="removeEntry(this)" style="display: none;">Remove</button>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Job Title *</label>
+                                    <input type="text" name="experience_title[]" placeholder="e.g., Software Engineer" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Company *</label>
+                                    <input type="text" name="experience_company[]" placeholder="e.g., Google Inc." required>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Start Date (MM/YYYY) *</label>
+                                        <input type="text" name="experience_start[]" placeholder="08/2020" pattern="(0[1-9]|1[0-2])\/\d{4}" required>
+                                        <small class="form-hint">Format: MM/YYYY</small>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>End Date (MM/YYYY) *</label>
+                                        <input type="text" name="experience_end[]" placeholder="03/2023 or Present" required>
+                                        <small class="form-hint">Format: MM/YYYY or "Present"</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn-add" onclick="addExperienceEntry()">
+                            <span class="btn-icon">+</span> Add Another Experience
+                        </button>
+                    </div>
+                </div>
+
+                
+                <div class="form-step" data-step="4">
+                    <h2 class="form-title">Projects</h2>
+                    <p class="form-subtitle">Showcase your work</p>
+                    
+                    <div class="toggle-section">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="hasProjects" name="has_projects" checked>
+                            <span class="toggle-text">I have projects to add</span>
+                        </label>
+                    </div>
+                    
+                    <div id="projectsSection" class="dynamic-section">
+                        <div id="projectEntries">
+                            
+                            <div class="dynamic-entry" data-entry-type="project">
+                                <div class="entry-header">
+                                    <h3 class="entry-title">Project #1</h3>
+                                    <button type="button" class="btn-remove" onclick="removeEntry(this)" style="display: none;">Remove</button>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Project Title *</label>
+                                    <input type="text" name="project_title[]" placeholder="e.g., E-commerce Platform" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Description *</label>
+                                    <textarea name="project_description[]" rows="4" placeholder="Describe your project, its purpose, and impact..." required></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Technologies Used *</label>
+                                    <input type="text" name="project_technologies[]" placeholder="React, Node.js, MongoDB (separate with |)" required>
+                                    <small class="form-hint">Separate technologies with | (pipe symbol)</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn-add" onclick="addProjectEntry()">
+                            <span class="btn-icon">+</span> Add Another Project
+                        </button>
+                    </div>
+                </div>
+
+                
+                <div class="form-step" data-step="5">
+                    <h2 class="form-title">Certifications</h2>
+                    <p class="form-subtitle">Add your professional certifications</p>
+                    
+                    <div class="toggle-section">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="hasCertifications" name="has_certifications">
+                            <span class="toggle-text">I have certifications to add</span>
+                        </label>
+                    </div>
+                    
+                    <div id="certificationsSection" class="dynamic-section" style="display: none;">
+                        <div id="certificationEntries">
+                            
+                            <div class="dynamic-entry" data-entry-type="certification">
+                                <div class="entry-header">
+                                    <h3 class="entry-title">Certification #1</h3>
+                                    <button type="button" class="btn-remove" onclick="removeEntry(this)" style="display: none;">Remove</button>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Certification Name *</label>
+                                    <input type="text" name="cert_name[]" placeholder="e.g., AWS Certified Developer">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Issuing Organization *</label>
+                                    <input type="text" name="cert_org[]" placeholder="e.g., Amazon Web Services">
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Issue Date</label>
+                                        <input type="month" name="cert_issue[]">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Expiry Date (if applicable)</label>
+                                        <input type="month" name="cert_expiry[]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn-add" onclick="addCertificationEntry()">
+                            <span class="btn-icon">+</span> Add Another Certification
+                        </button>
+                    </div>
+                </div>
+
+                
+                <div class="form-step" data-step="6">
+                    <h2 class="form-title">Skills</h2>
+                    <p class="form-subtitle">Add your technical and soft skills</p>
+                    
+                    <div class="toggle-section">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="hasSkills" name="has_skills" checked>
+                            <span class="toggle-text">I have skills to add</span>
+                        </label>
+                    </div>
+                    
+                    <div id="skillsSection" class="dynamic-section">
+                        <div class="form-group">
+                            <label>Technical Skills *</label>
+                            <div class="tag-input-container">
+                                <div class="tags" id="technicalTags"></div>
+                                <input type="text" id="technicalSkillInput" placeholder="Type a skill and press Enter">
+                            </div>
+                            <input type="hidden" id="technical_skills" name="technical_skills">
+                            <small class="form-hint">Examples: Python, JavaScript, Machine Learning, AWS, etc.</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Soft Skills *</label>
+                            <div class="tag-input-container">
+                                <div class="tags" id="softTags"></div>
+                                <input type="text" id="softSkillInput" placeholder="Type a skill and press Enter">
+                            </div>
+                            <input type="hidden" id="soft_skills" name="soft_skills">
+                            <small class="form-hint">Examples: Leadership, Communication, Problem Solving, etc.</small>
+                        </div>
+                    </div>
+                </div>
+
+               
+                <div class="form-step" data-step="7">
+                    <h2 class="form-title">Review Your Information</h2>
+                    <p class="form-subtitle">Please verify all details before submitting</p>
+                    
+                    <div id="reviewContent">
+                        
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="termsAccept" required>
+                            <span>I confirm that all information provided is accurate and true</span>
+                        </label>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        
+        <div class="form-navigation">
+            <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">
+                <span class="btn-icon">←</span> Back
+            </button>
+            <button type="button" class="btn btn-primary" id="nextBtn">
+                Next <span class="btn-icon">→</span>
+            </button>
+            <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;" form="resumeForm">
+                Submit Resume <span class="btn-icon">✓</span>
+            </button>
+        </div>
+    </div>
+
+    
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-message">
+            <div class="success-icon">✓</div>
+            <h2>Resume Submitted Successfully!</h2>
+            <p>Thank you for submitting your resume. We'll review it and get back to you soon.</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dynamic-fields.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/form-navigation.js') }}"></script>
+</body>
+</html>

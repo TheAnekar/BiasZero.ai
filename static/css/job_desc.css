@@ -1,0 +1,76 @@
+body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #f8f9fa, #eef1f7);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 700px;
+    margin: 60px auto;
+    background: #fff;
+    padding: 40px 50px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.tagline {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    color: #34495e;
+    margin-top: 20px;
+    margin-bottom: 6px;
+}
+
+input[type="text"], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+    transition: 0.3s ease;
+    font-size: 1rem;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #1abc9c;
+    box-shadow: 0 0 5px rgba(26, 188, 156, 0.4);
+    outline: none;
+}
+
+.submit-btn {
+    display: block;
+    margin: 30px auto 0 auto;
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #16a085;
+}
+
+#wordCount {
+    text-align: right;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}

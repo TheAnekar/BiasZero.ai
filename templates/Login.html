@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiasZero | Login & Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1><span class="bias">Bias</span><span class="zero">Zero</span></h1>
+            <p class="tagline">Eliminate Hiring Bias. Empower Fair AI.</p>
+        </div>
+
+        <div class="form-container">
+            <h2 id="formTitle">Login</h2>
+
+
+            <form id="loginForm" action="/login" method="POST" class="form active">
+
+                <div class="user-fields">
+                    <input type="email" name="email" placeholder="Enter E-mail">
+                </div>
+
+
+                <div class="company-fields">
+                    <input type="email" name="hr_email" placeholder="HR Email">
+                    <input type="text" name="company_code" placeholder="Company Code">
+                </div>
+
+
+                <input type="password" name="password" placeholder="Enter Password">
+
+                <div class="role-select">
+                    <label><input type="radio" name="LoginRole" value="User" onclick="switchRole('login','user')"
+                            required> User</label>
+                    <label><input type="radio" name="LoginRole" value="Company" onclick="switchRole('login','company')"
+                            required> Company</label>
+                </div>
+
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+
+            <form id="registerForm" action="/register" method="POST" class="form">
+
+
+                <div class="user-fields">
+                    <input type="text" name="name" placeholder="Enter Full Name">
+                    <input type="email" name="email" placeholder="Enter E-mail">
+                </div>
+
+
+                <div class="company-fields">
+                    <input type="email" name="hr_email" placeholder="HR Email">
+                    <input type="text" name="company_code" placeholder="Company Code">
+                </div>
+
+
+                <input type="password" name="password" placeholder="Create Password">
+
+                <div class="role-select">
+                    <label><input type="radio" name="RegisterRole" value="User" onclick="switchRole('register','user')"
+                            required> User</label>
+                    <label><input type="radio" name="RegisterRole" value="Company"
+                            onclick="switchRole('register','company')" required> Company</label>
+                </div>
+
+                <button type="submit" class="btn">Register</button>
+            </form>
+
+
+            <p id="toggleText">
+                Don't have an account?
+                <a href="#" onclick="toggleForms()">Register</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function toggleForms() {
+            const loginForm = document.getElementById("loginForm");
+            const registerForm = document.getElementById("registerForm");
+            const formTitle = document.getElementById("formTitle");
+            const toggleText = document.getElementById("toggleText");
+
+            if (loginForm.classList.contains("active")) {
+                loginForm.classList.remove("active");
+                registerForm.classList.add("active");
+                formTitle.textContent = "Register";
+                toggleText.innerHTML = 'Already have an account? <a href="#" onclick="toggleForms()">Login</a>';
+            } else {
+                registerForm.classList.remove("active");
+                loginForm.classList.add("active");
+                formTitle.textContent = "Login";
+                toggleText.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleForms()">Register</a>';
+            }
+        }
+        function switchRole(formType, role) {
+
+            const form = formType === 'login'
+                ? document.getElementById("loginForm")
+                : document.getElementById("registerForm");
+
+            const userFields = form.querySelector(".user-fields");
+            const companyFields = form.querySelector(".company-fields");
+
+            if (role === "company") {
+                userFields.style.display = "none";
+                companyFields.style.display = "flex";
+
+                toggleRequired(userFields, false);
+                toggleRequired(companyFields, true);
+            }
+            else {
+                userFields.style.display = "flex";
+                companyFields.style.display = "none";
+
+                toggleRequired(userFields, true);
+                toggleRequired(companyFields, false);
+            }
+        }
+
+        function toggleRequired(container, state) {
+            container.querySelectorAll("input").forEach(i => {
+                if (state) i.setAttribute("required", true)
+                else i.removeAttribute("required")
+            });
+        }
+
+    </script>
+</body>
+
+</html>
