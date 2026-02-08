@@ -178,9 +178,11 @@ def login():
             if session['user_role'] == 'Company':
                 return redirect(url_for('job_desc'))
 
-            existing_profile = resumes.find_one({'user_id': session['user_id']})
+            existing_profile = resumes.find_one({'user_id': ObjectId(session['user_id'])})
+
             if existing_profile:
-                return redirect(url_for('profile', mode='view'))
+                return redirect(url_for('landing'))
+
             else:
                 return redirect(url_for('profile', mode='create'))
 
@@ -211,7 +213,8 @@ def submit_resume():
     
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    user_id = session['user_id']
+    user_id = ObjectId(session['user_id'])
+
     data = {
         "user_id": user_id,
         "personal_info": {
@@ -295,7 +298,8 @@ def user_profile():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    resume = resumes.find_one({'user_id': session['user_id']})
+    resume = resumes.find_one({'user_id': ObjectId(session['user_id'])})
+
 
     return render_template('user_profile.html', resume=resume)
 

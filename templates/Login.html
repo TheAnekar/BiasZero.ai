@@ -35,8 +35,8 @@
                 <input type="password" name="password" placeholder="Enter Password">
 
                 <div class="role-select">
-                    <label><input type="radio" name="LoginRole" value="User" onclick="switchRole('login','user')"
-                            required> User</label>
+                    <label><input type="radio" name="LoginRole" value="User" onclick="switchRole('login','user')" checked>User</label>
+
                     <label><input type="radio" name="LoginRole" value="Company" onclick="switchRole('login','company')"
                             required> Company</label>
                 </div>
@@ -63,8 +63,9 @@
                 <input type="password" name="password" placeholder="Create Password">
 
                 <div class="role-select">
-                    <label><input type="radio" name="RegisterRole" value="User" onclick="switchRole('register','user')"
-                            required> User</label>
+                    <label ><input type="radio" name="RegisterRole" value="User" onclick="switchRole('register','user')"
+                        checked>User</label>
+
                     <label><input type="radio" name="RegisterRole" value="Company"
                             onclick="switchRole('register','company')" required> Company</label>
                 </div>
@@ -130,6 +131,11 @@
                 else i.removeAttribute("required")
             });
         }
+        window.addEventListener("DOMContentLoaded", () => {
+            switchRole('login', 'user');
+            switchRole('register', 'user');
+        });
+
 
     </script>
 </body>
