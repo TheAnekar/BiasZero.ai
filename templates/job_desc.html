@@ -3,42 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BiasZero | Job Description Collector</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/job_desc.css') }}">
+    <title>Post Job | BiasZero</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/job_desc.css') }}">
 </head>
+
 <body>
-    <div class="container">
-        <h1>BiasZero Job Description Collector</h1>
-        <p class="tagline">Help us build a fairer hiring ecosystem by submitting job postings for analysis.</p>
+
+<header class="topbar">
+    <h1 class="logo">BiasZero</h1>
+
+    <div class="actions">
+        <a href="{{ url_for('dashboard') }}" class="primary-btn">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+            Logout
+        </a>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="form-card">
+
+        <h1>Post a Job</h1>
+        <p class="tagline">
+            Submit a job description for fairness analysis.
+        </p>
 
         <form action="{{ url_for('submit_job') }}" method="POST" id="jobForm">
-            <label for="company_name">Company Name:</label>
-            <input type="text" id="company_name" name="company_name" placeholder="e.g., TechNova Solutions" required>
 
-            <label for="position">Position Title:</label>
-            <input type="text" id="position" name="position" placeholder="e.g., Data Scientist" required>
+            <label>Company Name</label>
+            <input type="text" name="company_name" required>
 
-            <label for="location">Job Location:</label>
-            <input type="text" id="location" name="location" placeholder="e.g., Remote / New York / London" required>
+            <label>Position Title</label>
+            <input type="text" name="position" required>
 
-            <label for="employment_type">Employment Type:</label>
-            <select id="employment_type" name="employment_type" required>
+            <label>Location</label>
+            <input type="text" name="location" required>
+
+            <label>Employment Type</label>
+            <select name="employment_type" required>
                 <option value="">--Select--</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-                <option value="Internship">Internship</option>
-                <option value="Contract">Contract</option>
-                <option value="Other">Other</option>
+                <option>Full-time</option>
+                <option>Part-time</option>
+                <option>Internship</option>
+                <option>Contract</option>
+                <option>Other</option>
             </select>
 
-            <label for="job_description">Job Description:</label>
-            <textarea id="job_description" name="job_description" rows="10" placeholder="Paste the full job description here..." required></textarea>
+            <label>Job Description</label>
+            <textarea name="job_description" rows="10" required></textarea>
             <div id="wordCount">Words: 0</div>
 
-            <button type="submit" class="submit-btn">Submit</button>
+            <button type="submit" class="submit-btn">
+                Submit Job
+            </button>
+
         </form>
+
     </div>
 
-    <script src="{{ url_for('static', filename='js/job_desc.js') }}"></script>
+</div>
+
+<script src="{{ url_for('static', filename='js/job_desc.js') }}"></script>
+
 </body>
 </html>

@@ -176,7 +176,8 @@ def login():
             session['user_role'] = user.get('role')
 
             if session['user_role'] == 'Company':
-                return redirect(url_for('job_desc'))
+                return redirect(url_for('dashboard'))
+
 
             existing_profile = resumes.find_one({'user_id': ObjectId(session['user_id'])})
 
@@ -244,6 +245,28 @@ def submit_resume():
     flash('Profile updated successfully!', 'success')
     return redirect(url_for('landing'))
 
+@app.route('/dashboard')
+def dashboard():
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if session.get('user_role') != 'Company':
+        flash('Access denied.', 'danger')
+        return redirect(url_for('profile', mode='view'))
+
+    user_id = session['user_id']
+
+    jobs = list(job_descriptions.find({
+        "submitted_by": user_id
+    }).sort("created_at", -1))
+
+    return render_template(
+        "dashboard.html",
+        jobs=jobs
+    )
+
+
 
 
 @app.route('/job_desc', methods=['GET'])
@@ -277,7 +300,8 @@ def submit_job():
 
     job_descriptions.insert_one(data)
     flash('Job description submitted successfully!', 'success')
-    return redirect(url_for('job_desc'))
+    return redirect(url_for('dashboard'))
+
 
 @app.route('/landing')
 def landing():

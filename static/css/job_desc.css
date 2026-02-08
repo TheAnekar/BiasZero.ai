@@ -1,76 +1,173 @@
-body {
-    font-family: 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #f8f9fa, #eef1f7);
-    margin: 0;
-    padding: 0;
+/* ===== GLOBAL ===== */
+
+* {
+    box-sizing: border-box;
 }
+
+body {
+    margin: 0;
+    font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+
+    background:
+        radial-gradient(circle at 20% 20%, #3b82f622 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, #9333ea22 0%, transparent 40%),
+        linear-gradient(135deg, #0f172a, #1e293b);
+
+    color: #e2e8f0;
+    min-height: 100vh;
+}
+
+/* ===== TOPBAR (MATCH DASHBOARD) ===== */
+
+.topbar {
+    backdrop-filter: blur(16px);
+    background: rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+
+    padding: 18px 36px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.actions {
+    display: flex;
+    gap: 14px;
+}
+
+/* ===== BUTTONS ===== */
+
+.primary-btn,
+.logout-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg,#3b82f6,#6366f1);
+    color: white;
+    box-shadow: 0 6px 18px rgba(59,130,246,0.4);
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+}
+
+.logout-btn {
+    background: rgba(239,68,68,0.15);
+    color: #fecaca;
+    border: 1px solid rgba(239,68,68,0.4);
+}
+
+.logout-btn:hover {
+    background: rgba(239,68,68,0.3);
+}
+
+/* ===== LAYOUT ===== */
 
 .container {
-    max-width: 700px;
+    max-width: 900px;
     margin: 60px auto;
-    background: #fff;
-    padding: 40px 50px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 0 25px;
 }
 
-h1 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 5px;
+/* ===== GLASS FORM CARD ===== */
+
+.form-card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(18px);
+
+    border-radius: 18px;
+    padding: 40px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.5);
+}
+
+.form-card h1 {
+    margin-top: 0;
 }
 
 .tagline {
-    text-align: center;
-    font-size: 0.95rem;
-    color: #7f8c8d;
+    opacity: 0.8;
     margin-bottom: 30px;
 }
 
-form label {
+/* ===== FORM ===== */
+
+label {
     display: block;
-    font-weight: bold;
-    color: #34495e;
-    margin-top: 20px;
+    margin-top: 18px;
     margin-bottom: 6px;
+    font-weight: 600;
 }
 
-input[type="text"], select, textarea {
+input,
+select,
+textarea {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    resize: vertical;
-    transition: 0.3s ease;
-    font-size: 1rem;
+    padding: 12px 14px;
+
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+
+    background: rgba(0,0,0,0.25);
+    color: white;
+
+    font-size: 14px;
 }
 
-input:focus, select:focus, textarea:focus {
-    border-color: #1abc9c;
-    box-shadow: 0 0 5px rgba(26, 188, 156, 0.4);
+input:focus,
+select:focus,
+textarea:focus {
     outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 12px rgba(99,102,241,0.5);
 }
+
+/* ===== SUBMIT BUTTON ===== */
 
 .submit-btn {
-    display: block;
-    margin: 30px auto 0 auto;
-    background-color: #1abc9c;
-    color: white;
+    margin-top: 30px;
+    width: 100%;
+
+    padding: 14px;
+    border-radius: 10px;
+
+    font-size: 16px;
+    font-weight: 600;
+
     border: none;
-    padding: 12px 25px;
-    font-size: 1rem;
-    border-radius: 6px;
     cursor: pointer;
-    transition: 0.3s ease;
+
+    color: white;
+    background: linear-gradient(135deg,#3b82f6,#8b5cf6);
+
+    box-shadow: 0 10px 25px rgba(99,102,241,0.5);
+    transition: all 0.25s ease;
 }
 
 .submit-btn:hover {
-    background-color: #16a085;
+    transform: translateY(-2px);
+    box-shadow: 0 16px 35px rgba(99,102,241,0.7);
 }
+
+/* ===== WORD COUNT ===== */
 
 #wordCount {
     text-align: right;
-    color: #7f8c8d;
-    font-size: 0.9rem;
-    margin-top: 5px;
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 4px;
 }

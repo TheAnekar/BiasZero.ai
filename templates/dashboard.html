@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <header class="topbar">
+    <h1 class="logo">BiasZero Dashboard</h1>
+
+    <div class="actions">
+        <a href="{{ url_for('job_desc') }}" class="primary-btn">
+            Post Job
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+            Logout
+        </a>
+    </div>
+</header>
+
+
+    <h1>Your Job Dashboard</h1>
+
+    {% if jobs|length == 0 %}
+        <div class="empty">
+            You have not posted any jobs.<br>
+            Post one now.
+        </div>
+    {% else %}
+        <div class="jobs">
+            {% for job in jobs %}
+                <div class="card">
+                    <h3>{{ job.position }}</h3>
+                    <p><strong>Company:</strong> {{ job.company_name }}</p>
+                    <p><strong>Location:</strong> {{ job.location }}</p>
+                    <p><strong>Type:</strong> {{ job.employment_type }}</p>
+                    <p><strong>Posted:</strong> {{ job.created_at }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+
+<!-- <a href="{{ url_for('job_desc') }}" class="fab">
+    Post a Job
+</a> -->
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+/* ===== GLOBAL RESET ===== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%, #3b82f622 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, #9333ea22 0%, transparent 40%),
+        linear-gradient(135deg, #0f172a, #1e293b);
+    color: #e2e8f0;
+    min-height: 100vh;
+}
+
+/* ===== TOP BAR ===== */
+
+.topbar {
+    backdrop-filter: blur(16px);
+    background: rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 18px 36px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* ===== BUTTONS ===== */
+
+.actions {
+    display: flex;
+    gap: 14px;
+}
+
+.primary-btn,
+.logout-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+
+/* POST BUTTON */
+
+.primary-btn {
+    background: linear-gradient(135deg,#3b82f6,#6366f1);
+    color: white;
+    box-shadow: 0 6px 18px rgba(59,130,246,0.4);
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 12px 26px rgba(59,130,246,0.6);
+}
+
+/* LOGOUT BUTTON */
+
+.logout-btn {
+    background: rgba(239,68,68,0.15);
+    color: #fecaca;
+    border: 1px solid rgba(239,68,68,0.4);
+}
+
+.logout-btn:hover {
+    background: rgba(239,68,68,0.3);
+    transform: translateY(-2px);
+}
+
+/* ===== CONTAINER ===== */
+
+.container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 25px;
+}
+
+/* ===== EMPTY STATE ===== */
+
+.empty {
+    text-align: center;
+    margin-top: 140px;
+    font-size: 32px;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+/* ===== GRID ===== */
+
+.jobs {
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(320px,1fr));
+    gap: 28px;
+}
+
+/* ===== CARD DESIGN ===== */
+
+.card {
+    position: relative;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(18px);
+    border-radius: 16px;
+    padding: 26px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.35),
+        inset 0 0 0 rgba(255,255,255,0);
+
+    transition: all 0.28s ease;
+}
+
+/* Hover aura effect */
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(120deg,#3b82f633,#8b5cf633);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+/* Lift */
+
+.card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+        0 18px 50px rgba(0,0,0,0.55);
+}
+
+/* TEXT STYLING */
+
+.card h3 {
+    margin-top: 0;
+    font-size: 20px;
+    color: white;
+}
+
+.card p {
+    margin: 7px 0;
+    font-size: 14px;
+    color: #cbd5e1;
+}
