@@ -315,17 +315,25 @@ def landing():
         "landing.html",
         jobs=jobs
     )
-
-@app.route('/user_profile')
+@app.route("/user_profile")
 def user_profile():
 
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
+    # 1️⃣ Check login
+    if "user_id" not in session:
+        return redirect(url_for("login"))
 
-    resume = resumes.find_one({'user_id': ObjectId(session['user_id'])})
+    # 2️⃣ DEFINE user_id (THIS WAS MISSING)
+    user_id = session["user_id"]
 
+    # 3️⃣ Fetch resume from MongoDB
+    resume = resumes.find_one({
+        "user_id": ObjectId(user_id)
+    })
 
-    return render_template('user_profile.html', resume=resume)
+   
+
+    # 4️⃣ Send to template
+    return render_template("user_profile.html", resume=resume)
 
 
 if __name__ == '__main__':

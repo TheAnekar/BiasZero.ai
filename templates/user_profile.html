@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>BiasZero | Profile</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_profile.css') }}">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+<div class="nav-container">
+
+<div class="nav-brand">
+<a href="{{ url_for('landing') }}">BiasZero</a>
+</div>
+
+<div class="nav-links">
+<a href="{{ url_for('landing') }}" class="nav-link">Home</a>
+<a href="#" id="editNavBtn" class="nav-link">Edit Resume</a>
+<a href="#" class="nav-link">Help</a>
+</div>
+
+</div>
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="main-container">
+
+<form class="form-container"
+      method="POST"
+      action="{{ url_for('submit_resume') }}"
+      id="resumeForm">
+
+<h2 class="form-title">My Resume</h2>
+<p class="form-subtitle">Navigate sections using the bar below</p>
+
+
+<!-- ================= SECTION NAV ================= -->
+
+<div class="profile-nav">
+<button type="button" class="nav-step active" data-section="personal">1<br><span>Personal</span></button>
+<button type="button" class="nav-step" data-section="education">2<br><span>Education</span></button>
+<button type="button" class="nav-step" data-section="experience">3<br><span>Experience</span></button>
+<button type="button" class="nav-step" data-section="projects">4<br><span>Projects</span></button>
+<button type="button" class="nav-step" data-section="certifications">5<br><span>Certifications</span></button>
+<button type="button" class="nav-step" data-section="skills">6<br><span>Skills</span></button>
+</div>
+
+
+<!-- ================= PERSONAL ================= -->
+
+<div class="profile-section active" id="personal">
+<h3>Personal Information</h3>
+
+<div class="review-item">
+<label>Name</label>
+<span class="view-mode">{{ resume.personal_info.name }}</span>
+<input class="edit-mode hidden" name="name" value="{{ resume.personal_info.name }}">
+</div>
+
+<div class="review-item">
+<label>Email</label>
+<span class="view-mode">{{ resume.personal_info.contact_email }}</span>
+<input class="edit-mode hidden" name="email" value="{{ resume.personal_info.contact_email }}">
+</div>
+
+<div class="review-item">
+<label>Location</label>
+<span class="view-mode">{{ resume.personal_info.location }}</span>
+<input class="edit-mode hidden" name="location" value="{{ resume.personal_info.location }}">
+</div>
+
+<div class="review-item">
+<label>Phone</label>
+<span class="view-mode">{{ resume.personal_info.contact_phone }}</span>
+<input class="edit-mode hidden" name="phone" value="{{ resume.personal_info.contact_phone }}">
+</div>
+
+</div>
+
+
+<!-- ================= EDUCATION ================= -->
+
+<div class="profile-section" id="education">
+<h3>Education</h3>
+
+<div id="educationContainer">
+
+{% for edu in resume.education.entries %}
+<div class="dynamic-entry editable-block">
+
+<span class="view-mode">
+<h4>{{ edu.degree }}</h4>
+<p>{{ edu.university }}</p>
+<p>{{ edu.year }} • Grade {{ edu.grade }}</p>
+</span>
+
+<div class="edit-mode hidden">
+<input name="education_degree[]" value="{{ edu.degree }}" placeholder="Degree">
+<input name="education_university[]" value="{{ edu.university }}" placeholder="University">
+<input name="education_year[]" value="{{ edu.year }}" placeholder="Year">
+<input name="education_grade[]" value="{{ edu.grade }}" placeholder="Grade">
+<button type="button" class="remove-entry">Remove</button>
+</div>
+
+</div>
+{% endfor %}
+
+</div>
+
+<button type="button" class="add-btn edit-mode hidden" data-type="education">
++ Add Education
+</button>
+
+</div>
+
+
+<!-- ================= EXPERIENCE ================= -->
+
+<div class="profile-section" id="experience">
+<h3>Experience</h3>
+
+<div id="experienceContainer">
+
+{% for exp in resume.experience.entries %}
+<div class="dynamic-entry editable-block">
+
+<span class="view-mode">
+<h4>{{ exp.job_title }}</h4>
+<p>{{ exp.company }}</p>
+<p>{{ exp.start_date }} — {{ exp.end_date }}</p>
+</span>
+
+<div class="edit-mode hidden">
+<input name="experience_title[]" value="{{ exp.job_title }}" placeholder="Job Title">
+<input name="experience_company[]" value="{{ exp.company }}" placeholder="Company">
+<input name="experience_start[]" value="{{ exp.start_date }}" placeholder="Start">
+<input name="experience_end[]" value="{{ exp.end_date }}" placeholder="End">
+<button type="button" class="remove-entry">Remove</button>
+</div>
+
+</div>
+{% endfor %}
+
+</div>
+
+<button type="button" class="add-btn edit-mode hidden" data-type="experience">
++ Add Experience
+</button>
+
+</div>
+
+
+<!-- ================= PROJECTS ================= -->
+
+<div class="profile-section" id="projects">
+<h3>Projects</h3>
+
+<div id="projectsContainer">
+
+{% for proj in resume.projects.entries %}
+<div class="dynamic-entry editable-block">
+
+<span class="view-mode">
+<h4>{{ proj.title }}</h4>
+<p>{{ proj.description }}</p>
+<p>{{ proj.technologies | join(", ") }}</p>
+</span>
+
+<div class="edit-mode hidden">
+<input name="project_title[]" value="{{ proj.title }}" placeholder="Title">
+<input name="project_description[]" value="{{ proj.description }}" placeholder="Description">
+<input name="project_technologies[]" value="{{ proj.technologies | join('|') }}" placeholder="Tech | separated">
+<button type="button" class="remove-entry">Remove</button>
+</div>
+
+</div>
+{% endfor %}
+
+</div>
+
+<button type="button" class="add-btn edit-mode hidden" data-type="project">
++ Add Project
+</button>
+
+</div>
+
+
+<!-- ================= CERTIFICATIONS ================= -->
+
+<div class="profile-section" id="certifications">
+<h3>Certifications</h3>
+
+<div id="certContainer">
+
+{% for cert in resume.certifications.entries %}
+<div class="dynamic-entry editable-block">
+
+<span class="view-mode">
+<h4>{{ cert.name }}</h4>
+<p>{{ cert.issuer }}</p>
+</span>
+
+<div class="edit-mode hidden">
+<input name="cert_name[]" value="{{ cert.name }}" placeholder="Certificate">
+<input name="cert_org[]" value="{{ cert.issuer }}" placeholder="Issuer">
+<button type="button" class="remove-entry">Remove</button>
+</div>
+
+</div>
+{% endfor %}
+
+</div>
+
+<button type="button" class="add-btn edit-mode hidden" data-type="cert">
++ Add Certification
+</button>
+
+</div>
+
+
+<!-- ================= SKILLS ================= -->
+
+<div class="profile-section" id="skills">
+<h3>Skills</h3>
+
+<div class="review-item">
+<label>Technical</label>
+<span class="view-mode">{{ resume.skills.technical | join(", ") }}</span>
+<input class="edit-mode hidden" name="technical_skills"
+value="{{ resume.skills.technical | join(', ') }}">
+</div>
+
+<div class="review-item">
+<label>Soft</label>
+<span class="view-mode">{{ resume.skills.soft | join(", ") }}</span>
+<input class="edit-mode hidden" name="soft_skills"
+value="{{ resume.skills.soft | join(', ') }}">
+</div>
+
+</div>
+
+
+<!-- ================= ACTION BUTTONS ================= -->
+
+<div class="form-actions">
+<button type="button" id="editBtn" class="edit-btn">Edit Resume</button>
+<button type="submit" id="saveBtn" class="save-btn hidden">Save Changes</button>
+</div>
+
+</form>
+</div>
+
+<script src="{{ url_for('static', filename='js/user_profile.js') }}"></script>
+
+</body>
+</html>
