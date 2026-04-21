@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BiasZero | Post a Job</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/globals.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/job.css') }}">
+</head>
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flash-container">
+  {% for cat, msg in messages %}
+  <div class="flash-msg {{ cat }}" onclick="this.remove()">
+    {% if cat == 'success' %}✓{% elif cat == 'danger' %}✕{% else %}⚠{% endif %} {{ msg }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<nav class="navbar" id="navbar">
+  <a class="nav-brand" href="{{ url_for('dashboard') }}">
+    <div class="nav-brand-icon">BZ</div>
+    <span class="nav-brand-name"><span class="bias">Bias</span>Zero</span>
+  </a>
+  <div class="nav-links">
+    <a href="{{ url_for('dashboard') }}" class="nav-link">📊 Dashboard</a>
+    <a href="{{ url_for('job_desc') }}"  class="nav-link active">➕ Post Job</a>
+  </div>
+  <div class="nav-actions">
+    <a href="{{ url_for('logout') }}" class="btn-ghost" style="font-size:13px;">Logout</a>
+  </div>
+</nav>
+
+<div class="job-desc-wrap page-enter">
+
+  <div class="job-desc-header">
+    <h1>Post a Job</h1>
+    <p>Create a new listing — candidates can apply directly from the job board</p>
+  </div>
+
+  <div class="job-form-card">
+    <form action="{{ url_for('submit_job') }}" method="POST" id="jobForm">
+
+      <div class="job-form-grid">
+        <div>
+          <label class="form-label">Company Name *</label>
+          <input type="text" name="company_name" class="form-control" placeholder="e.g. Infosys" required>
+        </div>
+        <div>
+          <label class="form-label">Position Title *</label>
+          <input type="text" name="position" class="form-control" placeholder="e.g. Senior Data Scientist" required>
+        </div>
+        <div>
+          <label class="form-label">Location *</label>
+          <input type="text" name="location" class="form-control" placeholder="e.g. Chennai / Remote" required>
+        </div>
+        <div>
+          <label class="form-label">Employment Type *</label>
+          <select name="employment_type" class="form-control" required>
+            <option value="">— Select —</option>
+            <option>Full-time</option>
+            <option>Part-time</option>
+            <option>Internship</option>
+            <option>Contract</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="full-col">
+          <label class="form-label">Salary / Compensation</label>
+          <input type="text" name="salary" class="form-control" placeholder="e.g. 8–14 LPA or ₹60,000/month or Negotiable">
+        </div>
+        <div class="full-col">
+          <label class="form-label">Job Description *</label>
+          <textarea name="job_description" class="form-control" rows="10"
+                    id="jobDescTA" placeholder="Describe responsibilities, requirements, company culture…" required></textarea>
+          <div class="word-count" id="wordCount">0 words</div>
+        </div>
+        <div class="full-col">
+          <label class="form-label">Requirements (one per line)</label>
+          <textarea name="requirements" class="form-control" rows="5"
+                    placeholder="3+ years Python experience&#10;Bachelor's degree in CS or related&#10;Strong communication skills"></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-job-btn">
+        🚀 Post Job Listing
+      </button>
+
+    </form>
+  </div>
+
+</div>
+
+<script>
+const ta = document.getElementById('jobDescTA');
+const wc = document.getElementById('wordCount');
+
+ta.addEventListener('input', () => {
+  const words = ta.value.trim().split(/\s+/).filter(Boolean).length;
+  wc.textContent = words + ' words';
+  wc.classList.toggle('over', words > 800);
+});
+
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+setTimeout(() => {
+  document.querySelectorAll('.flash-msg').forEach(el => {
+    el.style.transition = 'all 0.4s';
+    el.style.opacity = '0';
+    setTimeout(() => el.remove(), 400);
+  });
+}, 3500);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BiasZero | Build Your Resume</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/globals.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+</head>
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flash-container">
+  {% for cat, msg in messages %}
+  <div class="flash-msg {{ cat }}" onclick="this.remove()">
+    {% if cat == 'success' %}✓{% elif cat == 'danger' %}✕{% else %}⚠{% endif %} {{ msg }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<nav class="navbar" id="navbar">
+  <a class="nav-brand" href="#">
+    <div class="nav-brand-icon">BZ</div>
+    <span class="nav-brand-name"><span class="bias">Bias</span>Zero</span>
+  </a>
+  <div class="nav-actions">
+    <a href="{{ url_for('logout') }}" class="btn-ghost" style="font-size:13px;">Logout</a>
+  </div>
+</nav>
+
+<div class="profile-wrap page-enter">
+
+  <div class="profile-header">
+    <h1>Build Your Resume</h1>
+    <p>Complete all sections — this information is used for bias analysis</p>
+  </div>
+
+  <!-- STEP NAV -->
+  <div class="step-nav" id="stepNav">
+    <div class="step-item">
+      <button class="step-btn active" data-section="personal" onclick="goToStep(this)">
+        <div class="step-circle">1</div>
+        <span class="step-label">Personal</span>
+      </button>
+    </div>
+    <div class="step-connector" id="conn-1"></div>
+    <div class="step-item">
+      <button class="step-btn" data-section="education" onclick="goToStep(this)">
+        <div class="step-circle">2</div>
+        <span class="step-label">Education</span>
+      </button>
+    </div>
+    <div class="step-connector" id="conn-2"></div>
+    <div class="step-item">
+      <button class="step-btn" data-section="experience" onclick="goToStep(this)">
+        <div class="step-circle">3</div>
+        <span class="step-label">Experience</span>
+      </button>
+    </div>
+    <div class="step-connector" id="conn-3"></div>
+    <div class="step-item">
+      <button class="step-btn" data-section="projects" onclick="goToStep(this)">
+        <div class="step-circle">4</div>
+        <span class="step-label">Projects</span>
+      </button>
+    </div>
+    <div class="step-connector" id="conn-4"></div>
+    <div class="step-item">
+      <button class="step-btn" data-section="certifications" onclick="goToStep(this)">
+        <div class="step-circle">5</div>
+        <span class="step-label">Certs</span>
+      </button>
+    </div>
+    <div class="step-connector" id="conn-5"></div>
+    <div class="step-item">
+      <button class="step-btn" data-section="skills" onclick="goToStep(this)">
+        <div class="step-circle">6</div>
+        <span class="step-label">Skills</span>
+      </button>
+    </div>
+  </div>
+
+  <form method="POST" action="{{ url_for('submit_resume') }}" id="resumeForm">
+  <div class="form-card">
+
+    <!-- PERSONAL -->
+    <div class="section-panel active" id="personal">
+      <div class="panel-title">Personal Information</div>
+      <div class="panel-desc">Your identity details — used to calculate bias factors</div>
+      <div class="fields-grid">
+        <div class="field-full">
+          <label class="form-label">Full Name *</label>
+          <input type="text" name="name" class="form-control" placeholder="e.g. Priya Sharma" required>
+        </div>
+        <div>
+          <label class="form-label">Age</label>
+          <input type="number" name="age" class="form-control" placeholder="e.g. 24" min="16" max="80">
+        </div>
+        <div>
+          <label class="form-label">Gender</label>
+          <select name="gender" class="form-control">
+            <option value="">Prefer not to say</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Non-binary">Non-binary</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Email *</label>
+          <input type="email" name="email" class="form-control" placeholder="you@email.com" required>
+        </div>
+        <div>
+          <label class="form-label">Phone</label>
+          <input type="tel" name="phone" class="form-control" placeholder="+91 98765 43210">
+        </div>
+        <div class="field-full">
+          <label class="form-label">Location</label>
+          <input type="text" name="location" class="form-control" placeholder="e.g. Chennai, Tamil Nadu">
+        </div>
+      </div>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="section-panel" id="education">
+      <div class="panel-title">Education</div>
+      <div class="panel-desc">Add your academic qualifications</div>
+      <div id="educationContainer"></div>
+      <button type="button" class="add-entry-btn" onclick="addEducation()">
+        ＋ Add Education
+      </button>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="section-panel" id="experience">
+      <div class="panel-title">Work Experience</div>
+      <div class="panel-desc">List your professional experience</div>
+      <div id="experienceContainer"></div>
+      <button type="button" class="add-entry-btn" onclick="addExperience()">
+        ＋ Add Experience
+      </button>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="section-panel" id="projects">
+      <div class="panel-title">Projects</div>
+      <div class="panel-desc">Highlight your key projects</div>
+      <div id="projectsContainer"></div>
+      <button type="button" class="add-entry-btn" onclick="addProject()">
+        ＋ Add Project
+      </button>
+    </div>
+
+    <!-- CERTIFICATIONS -->
+    <div class="section-panel" id="certifications">
+      <div class="panel-title">Certifications</div>
+      <div class="panel-desc">Add your professional certifications</div>
+      <div id="certContainer"></div>
+      <button type="button" class="add-entry-btn" onclick="addCert()">
+        ＋ Add Certification
+      </button>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="section-panel" id="skills">
+      <div class="panel-title">Skills</div>
+      <div class="panel-desc">List your technical and soft skills (comma-separated)</div>
+      <div class="fields-grid one-col">
+        <div>
+          <label class="form-label">Technical Skills</label>
+          <input type="text" name="technical_skills" class="form-control"
+                 placeholder="e.g. Python, React, Machine Learning, SQL">
+        </div>
+        <div>
+          <label class="form-label">Soft Skills</label>
+          <input type="text" name="soft_skills" class="form-control"
+                 placeholder="e.g. Leadership, Communication, Problem Solving">
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="form-footer">
+      <div class="footer-left">
+        <button type="button" class="btn-ghost" id="prevBtn" onclick="prevStep()" style="display:none;">← Back</button>
+      </div>
+      <div class="footer-right">
+        <button type="button" class="btn-primary" id="nextBtn" onclick="nextStep()">Next →</button>
+        <button type="submit" class="btn-primary" id="submitBtn" style="display:none;">
+          Save Resume ✓
+        </button>
+      </div>
+    </div>
+
+  </div>
+  </form>
+
+</div>
+
+<script>
+const sections = ['personal','education','experience','projects','certifications','skills'];
+let current = 0;
+
+function goToStep(btn) {
+  const target = btn.dataset.section;
+  const idx    = sections.indexOf(target);
+  if (idx !== -1) activateStep(idx);
+}
+
+function activateStep(idx) {
+  sections.forEach((id, i) => {
+    const panel = document.getElementById(id);
+    const btn   = document.querySelector(`.step-btn[data-section="${id}"]`);
+    panel.classList.toggle('active', i === idx);
+    btn.classList.remove('active','done');
+    if (i === idx) btn.classList.add('active');
+    else if (i < idx) btn.classList.add('done');
+  });
+
+  current = idx;
+  document.getElementById('prevBtn').style.display   = idx > 0 ? '' : 'none';
+  document.getElementById('nextBtn').style.display   = idx < sections.length - 1 ? '' : 'none';
+  document.getElementById('submitBtn').style.display = idx === sections.length - 1 ? '' : 'none';
+}
+
+function nextStep() { if (current < sections.length - 1) activateStep(current + 1); }
+function prevStep() { if (current > 0) activateStep(current - 1); }
+
+/* --- Dynamic Entry Templates --- */
+function entryHTML(fieldsHTML) {
+  return `<div class="entry-block fields-grid">
+    ${fieldsHTML}
+    <div class="field-full" style="display:flex;justify-content:flex-end;">
+      <button type="button" class="remove-btn" onclick="this.closest('.entry-block').remove()">✕ Remove</button>
+    </div>
+  </div>`;
+}
+
+function addEducation() {
+  document.getElementById('educationContainer').insertAdjacentHTML('beforeend', entryHTML(`
+    <div><label class="form-label">Degree</label>
+      <input name="education_degree[]" class="form-control" placeholder="e.g. B.Tech Computer Science"></div>
+    <div><label class="form-label">University</label>
+      <input name="education_university[]" class="form-control" placeholder="e.g. Anna University"></div>
+    <div><label class="form-label">Year</label>
+      <input name="education_year[]" class="form-control" placeholder="e.g. 2022-2026"></div>
+    <div><label class="form-label">Grade / CGPA</label>
+      <input name="education_grade[]" class="form-control" placeholder="e.g. 8.5 CGPA"></div>
+  `));
+}
+
+function addExperience() {
+  document.getElementById('experienceContainer').insertAdjacentHTML('beforeend', entryHTML(`
+    <div><label class="form-label">Job Title</label>
+      <input name="experience_title[]" class="form-control" placeholder="e.g. Software Engineer Intern"></div>
+    <div><label class="form-label">Company</label>
+      <input name="experience_company[]" class="form-control" placeholder="e.g. Infosys"></div>
+    <div><label class="form-label">Start Date</label>
+      <input name="experience_start[]" class="form-control" placeholder="e.g. Jun 2024"></div>
+    <div><label class="form-label">End Date</label>
+      <input name="experience_end[]" class="form-control" placeholder="e.g. Dec 2024 or Present"></div>
+  `));
+}
+
+function addProject() {
+  document.getElementById('projectsContainer').insertAdjacentHTML('beforeend', `
+    <div class="entry-block">
+      <div class="fields-grid one-col" style="gap:14px;">
+        <div><label class="form-label">Project Title</label>
+          <input name="project_title[]" class="form-control" placeholder="e.g. Lung Cancer Diagnosis AI"></div>
+        <div><label class="form-label">Description</label>
+          <textarea name="project_description[]" class="form-control" rows="3" placeholder="Brief project description…"></textarea></div>
+        <div><label class="form-label">Technologies (pipe-separated)</label>
+          <input name="project_technologies[]" class="form-control" placeholder="e.g. Python|TensorFlow|Flask"></div>
+        <div style="display:flex;justify-content:flex-end;">
+          <button type="button" class="remove-btn" onclick="this.closest('.entry-block').remove()">✕ Remove</button>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+function addCert() {
+  document.getElementById('certContainer').insertAdjacentHTML('beforeend', entryHTML(`
+    <div><label class="form-label">Certificate Name</label>
+      <input name="cert_name[]" class="form-control" placeholder="e.g. AWS Solutions Architect"></div>
+    <div><label class="form-label">Issuing Organization</label>
+      <input name="cert_org[]" class="form-control" placeholder="e.g. Amazon Web Services"></div>
+  `));
+}
+
+// Auto-dismiss flashes
+setTimeout(() => {
+  document.querySelectorAll('.flash-msg').forEach(el => {
+    el.style.transition = 'all 0.4s';
+    el.style.opacity = '0';
+    setTimeout(() => el.remove(), 400);
+  });
+}, 3500);
+</script>
+
+</body>
+</html>

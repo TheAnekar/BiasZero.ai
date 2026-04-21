@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BiasZero | {{ job.position }} — Applicants</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/globals.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/job.css') }}">
+</head>
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flash-container">
+  {% for cat, msg in messages %}
+  <div class="flash-msg {{ cat }}" onclick="this.remove()">
+    {% if cat == 'success' %}✓{% elif cat == 'danger' %}✕{% else %}⚠{% endif %} {{ msg }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<nav class="navbar" id="navbar">
+  <a class="nav-brand" href="{{ url_for('dashboard') }}">
+    <div class="nav-brand-icon">BZ</div>
+    <span class="nav-brand-name"><span class="bias">Bias</span>Zero</span>
+  </a>
+  <div class="nav-links">
+    <a href="{{ url_for('dashboard') }}" class="nav-link">← Dashboard</a>
+  </div>
+  <div class="nav-actions">
+    <a href="{{ url_for('logout') }}" class="btn-ghost" style="font-size:13px; padding:8px 14px;">Logout</a>
+  </div>
+</nav>
+
+<div class="job-view-layout">
+
+  <!-- LEFT: JOB DETAILS -->
+  <div class="job-detail-panel">
+
+    <div style="margin-bottom:22px;">
+      <h1>{{ job.position }}</h1>
+      <div class="job-detail-company">{{ job.company_name }}</div>
+    </div>
+
+    <div class="detail-row">
+      <span class="icon">📍</span>
+      <span>{{ job.location }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="icon">💼</span>
+      <span>{{ job.employment_type }}</span>
+    </div>
+    {% if job.salary %}
+    <div class="detail-row">
+      <span class="icon">💰</span>
+      <span style="color:#6ee7b7; font-weight:600;">{{ job.salary }}</span>
+    </div>
+    {% endif %}
+    <div class="detail-row">
+      <span class="icon">📅</span>
+      <span>{{ job.created_at.strftime('%d %b %Y') if job.created_at else '—' }}</span>
+    </div>
+
+    {% if job.requirements %}
+    <div class="requirements-section">
+      <div class="req-label">Requirements</div>
+      {% for req in job.requirements %}
+      <div class="req-item">{{ req }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="divider"></div>
+
+    <div class="job-desc-text">{{ job.job_description }}</div>
+
+  </div>
+
+  <!-- RIGHT: APPLICANTS -->
+  <div class="applicants-panel">
+
+    <h2>
+      Applicants
+      <span class="applicant-count-badge">{{ applicants|length }}</span>
+    </h2>
+
+    {% if applicants %}
+    <div class="applicant-grid stagger">
+
+      {% for applicant in applicants %}
+      <div class="flip-card" id="card-{{ loop.index }}">
+        <div class="flip-inner">
+
+          <!-- FRONT -->
+          <div class="flip-front">
+            <div>
+              <h3>{{ applicant.personal_info.name }}</h3>
+              <p style="margin-top:4px; font-size:13px;">📍 {{ applicant.personal_info.location }}</p>
+
+              {% if applicant.bias_label %}
+              <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
+                {% set bc = applicant.bias_color or 'teal' %}
+                <span class="bias-pill {{ 'low' if bc == 'green' else ('high' if bc == 'red' else 'medium') }}">
+                  {{ applicant.bias_label }}
+                </span>
+                {% if applicant.is_anonymized %}
+                <span class="badge badge-amber" style="font-size:11px;">🎭 Anon</span>
+                {% endif %}
+              </div>
+              {% endif %}
+
+              {% if applicant.skills and applicant.skills.technical %}
+              <p style="margin-top:10px; font-size:12px; color:var(--t2); line-height:1.5;">
+                {{ applicant.skills.technical[:3] | join(', ') }}{% if applicant.skills.technical|length > 3 %} +{{ applicant.skills.technical|length - 3 }} more{% endif %}
+              </p>
+              {% endif %}
+            </div>
+
+            <button class="flip-btn" onclick="flipCard('card-{{ loop.index }}')">
+              View Resume →
+            </button>
+          </div>
+
+          <!-- BACK -->
+          <div class="flip-back">
+            <div style="overflow-y:auto; flex:1;">
+
+              {% if applicant.skills.technical %}
+              <h4>Technical Skills</h4>
+              <p>{{ applicant.skills.technical | join(', ') }}</p>
+              {% endif %}
+
+              {% if applicant.education.entries %}
+              <h4>Education</h4>
+              {% for edu in applicant.education.entries %}
+              <p>{{ edu.degree }} — {{ edu.university }}</p>
+              {% endfor %}
+              {% endif %}
+
+              {% if applicant.experience.entries %}
+              <h4>Experience</h4>
+              {% for exp in applicant.experience.entries %}
+              <p>{{ exp.job_title }} @ {{ exp.company }}</p>
+              {% endfor %}
+              {% endif %}
+
+              {% if applicant.projects.entries %}
+              <h4>Projects</h4>
+              {% for proj in applicant.projects.entries %}
+              <p>{{ proj.title }}</p>
+              {% endfor %}
+              {% endif %}
+
+              {% if applicant.bias_score is not none %}
+              <h4>Bias Score</h4>
+              <p>
+                {% set bc = applicant.bias_color or 'teal' %}
+                <span class="bias-pill {{ 'low' if bc == 'green' else ('high' if bc == 'red' else 'medium') }}">
+                  {{ applicant.bias_score }} — {{ applicant.bias_label }}
+                </span>
+              </p>
+              {% endif %}
+
+            </div>
+            <button class="flip-btn-back" onclick="flipCard('card-{{ loop.index }}')">
+              ← Back
+            </button>
+          </div>
+
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+
+    {% else %}
+    <div class="empty-state" style="padding:60px 20px; flex:1; justify-content:center;">
+      <div class="empty-state-icon">📭</div>
+      <h3>No applicants yet</h3>
+      <p>Applications will appear here once candidates apply.</p>
+    </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
+<script>
+function flipCard(id) {
+  document.getElementById(id).classList.toggle('flipped');
+}
+
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+</script>
+
+</body>
+</html>

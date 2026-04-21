@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BiasZero | My Resume</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/globals.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+</head>
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flash-container">
+  {% for cat, msg in messages %}
+  <div class="flash-msg {{ cat }}" onclick="this.remove()">
+    {% if cat == 'success' %}✓{% elif cat == 'danger' %}✕{% else %}⚠{% endif %} {{ msg }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<nav class="navbar" id="navbar">
+  <a class="nav-brand" href="{{ url_for('landing') }}">
+    <div class="nav-brand-icon">BZ</div>
+    <span class="nav-brand-name"><span class="bias">Bias</span>Zero</span>
+  </a>
+  <div class="nav-links">
+    <a href="{{ url_for('landing') }}" class="nav-link">Jobs</a>
+    <a href="{{ url_for('user_profile') }}" class="nav-link active">My Resume</a>
+  </div>
+  <div class="nav-actions">
+    <a href="{{ url_for('user_profile') }}" class="nav-avatar">
+      {{ user_name[0].upper() if user_name else 'U' }}
+    </a>
+    <a href="{{ url_for('logout') }}" class="btn-ghost" style="font-size:13px; padding:8px 14px;">Logout</a>
+  </div>
+</nav>
+
+<div class="profile-wrap page-enter">
+
+  <div class="profile-header">
+    <h1>My Resume</h1>
+    <p>View, edit, and analyse your resume for bias factors</p>
+  </div>
+
+  <!-- Anonymized banner -->
+  {% if resume.is_anonymized %}
+  <div class="anon-banner">
+    🎭 <strong>Anonymized</strong> — Employers see masked identity data only.
+    <span class="anon-id">ID: {{ resume.candidate_id }}</span>
+  </div>
+  {% endif %}
+
+  <!-- STEP NAV (tabs) -->
+  <div class="step-nav">
+    <div class="step-item">
+      <button class="step-btn active" data-section="personal" onclick="activateTab(this)">
+        <div class="step-circle">1</div><span class="step-label">Personal</span>
+      </button>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-item">
+      <button class="step-btn" data-section="education" onclick="activateTab(this)">
+        <div class="step-circle">2</div><span class="step-label">Education</span>
+      </button>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-item">
+      <button class="step-btn" data-section="experience" onclick="activateTab(this)">
+        <div class="step-circle">3</div><span class="step-label">Experience</span>
+      </button>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-item">
+      <button class="step-btn" data-section="projects" onclick="activateTab(this)">
+        <div class="step-circle">4</div><span class="step-label">Projects</span>
+      </button>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-item">
+      <button class="step-btn" data-section="certifications" onclick="activateTab(this)">
+        <div class="step-circle">5</div><span class="step-label">Certs</span>
+      </button>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step-item">
+      <button class="step-btn" data-section="skills" onclick="activateTab(this)">
+        <div class="step-circle">6</div><span class="step-label">Skills</span>
+      </button>
+    </div>
+  </div>
+
+  <form method="POST" action="{{ url_for('submit_resume') }}" id="resumeForm">
+  <div class="form-card">
+
+    <!-- ===== PERSONAL ===== -->
+    <div class="section-panel active" id="personal">
+      <div class="panel-title">Personal Information</div>
+      <div class="panel-desc">Your identity details used for bias analysis</div>
+
+      <div class="fields-grid">
+        <div class="field-full">
+          <label class="form-label">Full Name</label>
+          <div class="view-mode view-field">{{ resume.personal_info.name or '—' }}</div>
+          <input class="edit-mode form-control" name="name" value="{{ resume.personal_info.name or '' }}" style="display:none;">
+        </div>
+        <div>
+          <label class="form-label">Age</label>
+          <div class="view-mode view-field">{{ resume.personal_info.age or '—' }}</div>
+          <input class="edit-mode form-control" name="age" type="number" value="{{ resume.personal_info.age or '' }}" style="display:none;">
+        </div>
+        <div>
+          <label class="form-label">Gender</label>
+          <div class="view-mode view-field">{{ resume.personal_info.gender or '—' }}</div>
+          <select class="edit-mode form-control" name="gender" style="display:none;">
+            <option value="">Prefer not to say</option>
+            {% for g in ['Male','Female','Non-binary','Other'] %}
+            <option {% if resume.personal_info.gender == g %}selected{% endif %}>{{ g }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Email</label>
+          <div class="view-mode view-field">{{ resume.personal_info.contact_email or '—' }}</div>
+          <input class="edit-mode form-control" name="email" type="email" value="{{ resume.personal_info.contact_email or '' }}" style="display:none;">
+        </div>
+        <div>
+          <label class="form-label">Phone</label>
+          <div class="view-mode view-field">{{ resume.personal_info.contact_phone or '—' }}</div>
+          <input class="edit-mode form-control" name="phone" value="{{ resume.personal_info.contact_phone or '' }}" style="display:none;">
+        </div>
+        <div>
+          <label class="form-label">Location</label>
+          <div class="view-mode view-field">{{ resume.personal_info.location or '—' }}</div>
+          <input class="edit-mode form-control" name="location" value="{{ resume.personal_info.location or '' }}" style="display:none;">
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== EDUCATION ===== -->
+    <div class="section-panel" id="education">
+      <div class="panel-title">Education</div>
+      <div class="panel-desc">Your academic qualifications</div>
+      <div id="educationContainer">
+        {% for edu in resume.education.entries %}
+        <div class="entry-block">
+          <div class="entry-view view-mode">
+            <h4>{{ edu.degree }}</h4>
+            <p class="accent">{{ edu.university }}</p>
+            <p>{{ edu.year }} &nbsp;·&nbsp; Grade: {{ edu.grade }}</p>
+          </div>
+          <div class="entry-edit edit-mode fields-grid" style="display:none;">
+            <div><label class="form-label">Degree</label>
+              <input name="education_degree[]" class="form-control" value="{{ edu.degree }}"></div>
+            <div><label class="form-label">University</label>
+              <input name="education_university[]" class="form-control" value="{{ edu.university }}"></div>
+            <div><label class="form-label">Year</label>
+              <input name="education_year[]" class="form-control" value="{{ edu.year }}"></div>
+            <div><label class="form-label">Grade</label>
+              <input name="education_grade[]" class="form-control" value="{{ edu.grade }}"></div>
+            <div class="field-full" style="display:flex;justify-content:flex-end;">
+              <button type="button" class="remove-btn" onclick="this.closest('.entry-block').remove()">✕ Remove</button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <button type="button" class="add-entry-btn edit-mode" onclick="addEducation()" style="display:none;">+ Add Education</button>
+    </div>
+
+    <!-- ===== EXPERIENCE ===== -->
+    <div class="section-panel" id="experience">
+      <div class="panel-title">Work Experience</div>
+      <div class="panel-desc">Your professional history</div>
+      <div id="experienceContainer">
+        {% for exp in resume.experience.entries %}
+        <div class="entry-block">
+          <div class="entry-view view-mode">
+            <h4>{{ exp.job_title }}</h4>
+            <p class="accent">{{ exp.company }}</p>
+            <p>{{ exp.start_date }} — {{ exp.end_date }}</p>
+          </div>
+          <div class="entry-edit edit-mode fields-grid" style="display:none;">
+            <div><label class="form-label">Job Title</label>
+              <input name="experience_title[]" class="form-control" value="{{ exp.job_title }}"></div>
+            <div><label class="form-label">Company</label>
+              <input name="experience_company[]" class="form-control" value="{{ exp.company }}"></div>
+            <div><label class="form-label">Start Date</label>
+              <input name="experience_start[]" class="form-control" value="{{ exp.start_date }}"></div>
+            <div><label class="form-label">End Date</label>
+              <input name="experience_end[]" class="form-control" value="{{ exp.end_date }}"></div>
+            <div class="field-full" style="display:flex;justify-content:flex-end;">
+              <button type="button" class="remove-btn" onclick="this.closest('.entry-block').remove()">✕ Remove</button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <button type="button" class="add-entry-btn edit-mode" onclick="addExperience()" style="display:none;">+ Add Experience</button>
+    </div>
+
+    <!-- ===== PROJECTS ===== -->
+    <div class="section-panel" id="projects">
+      <div class="panel-title">Projects</div>
+      <div class="panel-desc">Your key projects and work</div>
+      <div id="projectsContainer">
+        {% for proj in resume.projects.entries %}
+        <div class="entry-block">
+          <div class="entry-view view-mode">
+            <h4>{{ proj.title }}</h4>
+            <p>{{ proj.description }}</p>
+            <p class="accent" style="margin-top:8px;">
+              {% for t in proj.technologies %}
+              <span class="badge badge-violet" style="margin-right:4px; margin-top:4px;">{{ t }}</span>
+              {% endfor %}
+            </p>
+          </div>
+          <div class="entry-edit edit-mode" style="display:none;">
+            <div class="fields-grid one-col" style="gap:12px;">
+              <div><label class="form-label">Title</label>
+                <input name="project_title[]" class="form-control" value="{{ proj.title }}"></div>
+              <div><label class="form-label">Description</label>
+                <textarea name="project_description[]" class="form-control" rows="3">{{ proj.description }}</textarea></div>
+              <div><label class="form-label">Technologies (pipe-separated)</label>
+                <input name="project_technologies[]" class="form-control" value="{{ proj.technologies | join('|') }}"></div>
+              <div style="display:flex;justify-content:flex-end;">
+                <button type="button" class="remove-btn" onclick="this.closest('.entry-block').remove()">✕ Remove</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <button type="button" class="add-entry-btn edit-mode" onclick="addProject()" style="display:none;">+ Add Project</button>
+    </div>
+
+    <!-- ===== CERTIFICATIONS ===== -->
+    <div class="section-panel" id="certifications">
+      <div class="panel-title">Certifications</div>
+      <div class="panel-desc">Your professional certifications</div>
+      <div id="certContainer">
+        {% for cert in resume.certifications.entries %}
+        <div class="entry-block">
+          <div class="entry-view view-mode">
+            <h4>{{ cert.name }}</h4>
+            <p>{{ cert.issuer }}</p>
+          </div>
+          <div class="entry-edit edit-mode fields-grid" style="display:none;">
+            <div><label class="form-label">Certificate</label>
+              <input name="cert_name[]" class="form-control" value="{{ cert.name }}"></div>
+            <div><label class="form-label">Issuer</label>
+              <input name="cert_org[]" class="form-control" value="{{ cert.issuer }}"></div>
+            <div class="field-full" style="display:flex;justify-content:flex-end;">
+              <button type="button" class="remove-btn" onclick="this.closest('.entry-block').remove()">✕ Remove</button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <button type="button" class="add-entry-btn edit-mode" onclick="addCert()" style="display:none;">+ Add Certification</button>
+    </div>
+
+    <!-- ===== SKILLS ===== -->
+    <div class="section-panel" id="skills">
+      <div class="panel-title">Skills</div>
+      <div class="panel-desc">Your technical and soft skills</div>
+      <div class="fields-grid one-col">
+        <div>
+          <label class="form-label">Technical Skills</label>
+          <div class="view-mode view-field" style="min-height:46px;">
+            {{ resume.skills.technical | join(', ') or '—' }}
+          </div>
+          <input class="edit-mode form-control" name="technical_skills"
+                 value="{{ resume.skills.technical | join(', ') }}" style="display:none;">
+        </div>
+        <div>
+          <label class="form-label">Soft Skills</label>
+          <div class="view-mode view-field" style="min-height:46px;">
+            {{ resume.skills.soft | join(', ') or '—' }}
+          </div>
+          <input class="edit-mode form-control" name="soft_skills"
+                 value="{{ resume.skills.soft | join(', ') }}" style="display:none;">
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FORM FOOTER ===== -->
+    <div class="form-footer">
+      <div class="footer-left">
+        <button type="button" id="editBtn" class="btn-primary" onclick="enterEditMode()">
+          ✏ Edit Resume
+        </button>
+        <button type="button" id="biasBtn" class="btn-teal-outline" onclick="calcBias()">
+          🔍 Analyse Bias
+        </button>
+        <button type="button" id="anonBtn" class="btn-ghost" onclick="anonymize()"
+          {% if resume.is_anonymized %}disabled title="Already anonymized" style="opacity:0.4; cursor:not-allowed;"{% endif %}>
+          🎭 Anonymize
+        </button>
+      </div>
+      <div class="footer-right">
+        <button type="submit" id="saveBtn" class="btn-primary" style="display:none;">
+          ✓ Save Changes
+        </button>
+        <button type="button" id="cancelBtn" class="btn-ghost" style="display:none;" onclick="cancelEdit()">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+  </div>
+  </form>
+
+</div>
+
+<!-- ===== BIAS ANALYSIS PANEL ===== -->
+<div class="bias-panel" id="biasPanel">
+  <button class="bias-close" onclick="closeBiasPanel()" aria-label="Close">✕</button>
+  <div class="bias-panel-title">Bias Analysis</div>
+
+  <div class="bias-score-ring">
+    <svg width="110" height="110" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="55" cy="55" r="44" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+      <circle cx="55" cy="55" r="44" fill="none" stroke-width="10"
+              stroke-linecap="round"
+              id="biasRing"
+              stroke-dasharray="276.5"
+              stroke-dashoffset="276.5"
+              stroke="var(--teal)"
+              style="transition: stroke-dashoffset 1.3s cubic-bezier(0.22,1,0.36,1), stroke 0.5s;"/>
+    </svg>
+    <div class="bias-score-text">
+      <span class="bias-score-num" id="biasScoreNum">—</span>
+      <span class="bias-score-pct">/ 1.0</span>
+    </div>
+  </div>
+
+  <div class="bias-label-badge" id="biasLabelBadge"></div>
+
+  <div class="bias-factors-title">Contributing Factors</div>
+  <div id="biasFactorsList"></div>
+
+  <div class="bias-hint">
+    Consider anonymizing your resume to reduce potential bias visible to employers.
+  </div>
+</div>
+
+<!-- Backdrop for bias panel on mobile -->
+<div id="biasBg" onclick="closeBiasPanel()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:799; backdrop-filter:blur(4px);"></div>
+
+<!-- Pre-load existing bias -->
+{% if resume.bias_score is not none %}
+<script>
+window.existingBias = {
+  score: {{ resume.bias_score }},
+  label: "{{ resume.bias_label }}",
+  color: "{{ resume.bias_color or 'teal' }}",
+  factors: {{ resume.bias_factors | tojson if resume.bias_factors else '[]' }}
+};
+</script>
+{% endif %}
+
+<script>
+/* ===== TAB NAVIGATION ===== */
+function activateTab(btn) {
+  document.querySelectorAll('.step-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(btn.dataset.section).classList.add('active');
+}
+
+/* ===== VIEW FIELD STYLING ===== */
+// Applied via CSS class .view-field
+
+/* ===== EDIT MODE ===== */
+function enterEditMode() {
+  document.querySelectorAll('.view-mode').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.edit-mode').forEach(el => {
+    el.style.display = el.tagName === 'BUTTON' ? 'flex' : '';
+  });
+  document.getElementById('editBtn').style.display   = 'none';
+  document.getElementById('biasBtn').style.display   = 'none';
+  document.getElementById('anonBtn').style.display   = 'none';
+  document.getElementById('saveBtn').style.display   = '';
+  document.getElementById('cancelBtn').style.display = '';
+}
+
+function cancelEdit() {
+  document.querySelectorAll('.view-mode').forEach(el => el.style.display = '');
+  document.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'none');
+  document.getElementById('editBtn').style.display   = '';
+  document.getElementById('biasBtn').style.display   = '';
+  document.getElementById('anonBtn').style.display   = '';
+  document.getElementById('saveBtn').style.display   = 'none';
+  document.getElementById('cancelBtn').style.display = 'none';
+}
+
+/* ===== DYNAMIC ENTRIES ===== */
+function entryHTML(fieldsHTML) {
+  return `<div class="entry-block fields-grid">
+    ${fieldsHTML}
+    <div class="field-full" style="display:flex;justify-content:flex-end;">
+      <button type="button" class="remove-btn" onclick="this.closest('.entry-block').remove()">✕ Remove</button>
+    </div>
+  </div>`;
+}
+
+function addEducation() {
+  document.getElementById('educationContainer').insertAdjacentHTML('beforeend', entryHTML(`
+    <div><label class="form-label">Degree</label><input name="education_degree[]" class="form-control" placeholder="B.Tech Computer Science"></div>
+    <div><label class="form-label">University</label><input name="education_university[]" class="form-control" placeholder="Anna University"></div>
+    <div><label class="form-label">Year</label><input name="education_year[]" class="form-control" placeholder="2022–2026"></div>
+    <div><label class="form-label">Grade</label><input name="education_grade[]" class="form-control" placeholder="8.5 CGPA"></div>
+  `));
+}
+function addExperience() {
+  document.getElementById('experienceContainer').insertAdjacentHTML('beforeend', entryHTML(`
+    <div><label class="form-label">Job Title</label><input name="experience_title[]" class="form-control" placeholder="Software Engineer Intern"></div>
+    <div><label class="form-label">Company</label><input name="experience_company[]" class="form-control" placeholder="Infosys"></div>
+    <div><label class="form-label">Start Date</label><input name="experience_start[]" class="form-control" placeholder="Jun 2024"></div>
+    <div><label class="form-label">End Date</label><input name="experience_end[]" class="form-control" placeholder="Dec 2024"></div>
+  `));
+}
+function addProject() {
+  document.getElementById('projectsContainer').insertAdjacentHTML('beforeend', `
+    <div class="entry-block">
+      <div class="fields-grid one-col" style="gap:12px;">
+        <div><label class="form-label">Title</label><input name="project_title[]" class="form-control" placeholder="Project title"></div>
+        <div><label class="form-label">Description</label><textarea name="project_description[]" class="form-control" rows="3" placeholder="Brief description…"></textarea></div>
+        <div><label class="form-label">Technologies (pipe-separated)</label><input name="project_technologies[]" class="form-control" placeholder="Python|TensorFlow|Flask"></div>
+        <div style="display:flex;justify-content:flex-end;"><button type="button" class="remove-btn" onclick="this.closest('.entry-block').remove()">✕ Remove</button></div>
+      </div>
+    </div>
+  `);
+}
+function addCert() {
+  document.getElementById('certContainer').insertAdjacentHTML('beforeend', entryHTML(`
+    <div><label class="form-label">Certificate Name</label><input name="cert_name[]" class="form-control" placeholder="AWS Solutions Architect"></div>
+    <div><label class="form-label">Issuer</label><input name="cert_org[]" class="form-control" placeholder="Amazon Web Services"></div>
+  `));
+}
+
+/* ===== BIAS ANALYSIS ===== */
+function showBiasResult(data) {
+  const score   = data.bias_score;
+  const label   = data.bias_label;
+  const color   = data.bias_color || 'teal';
+  const factors = data.bias_factors || [];
+
+  const colorMap = {
+    green: '#30d688',
+    amber: '#f5a623',
+    red:   '#f05252',
+    teal:  '#0ff4c6',
+    cyan:  '#0ff4c6'
+  };
+  const strokeColor = colorMap[color] || colorMap.teal;
+
+  document.getElementById('biasScoreNum').textContent = score;
+  const circumference = 276.5;
+  document.getElementById('biasRing').style.strokeDashoffset = circumference * (1 - parseFloat(score));
+  document.getElementById('biasRing').style.stroke = strokeColor;
+
+  const badgeClass = color === 'green' ? 'badge-green' : color === 'red' ? 'badge-red' : 'badge-amber';
+  document.getElementById('biasLabelBadge').innerHTML =
+    `<span class="badge ${badgeClass}" style="font-size:14px; padding:6px 18px;">${label}</span>`;
+
+  const factorsList = document.getElementById('biasFactorsList');
+  factorsList.innerHTML = factors.length
+    ? factors.map(f => `<div class="bias-factor-item">${f}</div>`).join('')
+    : '<div style="font-size:13px;color:var(--t2);">No specific factors detected.</div>';
+
+  openBiasPanel();
+}
+
+function openBiasPanel() {
+  document.getElementById('biasPanel').style.display = 'block';
+  document.getElementById('biasBg').style.display = 'block';
+}
+function closeBiasPanel() {
+  const panel = document.getElementById('biasPanel');
+  panel.style.transition = 'transform 0.3s var(--ease), opacity 0.3s';
+  panel.style.transform = 'translateX(100%)';
+  panel.style.opacity = '0';
+  document.getElementById('biasBg').style.display = 'none';
+  setTimeout(() => {
+    panel.style.display = 'none';
+    panel.style.transform = '';
+    panel.style.opacity = '';
+  }, 320);
+}
+
+function calcBias() {
+  const btn = document.getElementById('biasBtn');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '⏳ Analysing…';
+  btn.disabled = true;
+
+  fetch('/calculate_bias', { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+      btn.innerHTML = orig;
+      btn.disabled = false;
+      if (data.error) { alert('Error: ' + data.error); return; }
+      showBiasResult(data);
+    })
+    .catch(err => {
+      btn.innerHTML = orig;
+      btn.disabled = false;
+      alert('Network error: ' + err);
+    });
+}
+
+function anonymize() {
+  if (!confirm('This will permanently anonymize your resume (name, contact, location). This cannot be undone. Continue?')) return;
+
+  const btn = document.getElementById('anonBtn');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '⏳ Anonymizing…';
+  btn.disabled = true;
+
+  fetch('/anonymize_resume', { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) {
+        alert('Error: ' + data.error);
+        btn.innerHTML = orig;
+        btn.disabled = false;
+        return;
+      }
+      alert('✓ Resume anonymized! Candidate ID: ' + (data.candidate_id || ''));
+      location.reload();
+    })
+    .catch(err => {
+      alert('Error: ' + err);
+      btn.innerHTML = orig;
+      btn.disabled = false;
+    });
+}
+
+// Show pre-existing bias on load
+if (window.existingBias) {
+  // Small delay so the panel slide animation fires after page load
+  setTimeout(() => showBiasResult(window.existingBias), 600);
+}
+
+// Flash dismiss
+setTimeout(() => {
+  document.querySelectorAll('.flash-msg').forEach(el => {
+    el.style.transition = 'all 0.4s';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(100px)';
+    setTimeout(() => el.remove(), 400);
+  });
+}, 3500);
+
+// Navbar scroll
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+</script>
+
+<!-- Inline style for view fields (avoids globals pollution) -->
+<style>
+.view-field {
+  display: block;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid transparent;
+  border-radius: var(--r-sm);
+  color: var(--t0);
+  font-size: 14.5px;
+  padding: 11px 14px;
+  min-height: 44px;
+  line-height: 1.5;
+}
+.entry-view .accent { color: var(--teal); font-size: 13.5px; font-weight: 500; }
+</style>
+
+</body>
+</html>

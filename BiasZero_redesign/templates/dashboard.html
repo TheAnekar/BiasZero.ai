@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BiasZero | Company Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/globals.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flash-container">
+  {% for cat, msg in messages %}
+  <div class="flash-msg {{ cat }}" onclick="this.remove()">
+    {% if cat == 'success' %}✓{% elif cat == 'danger' %}✕{% elif cat == 'warning' %}⚠{% else %}ℹ{% endif %}
+    {{ msg }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a class="nav-brand" href="{{ url_for('dashboard') }}">
+    <div class="nav-brand-icon">BZ</div>
+    <span class="nav-brand-name"><span class="bias">Bias</span>Zero</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="{{ url_for('dashboard') }}" class="nav-link active">Dashboard</a>
+    <a href="{{ url_for('job_desc') }}" class="nav-link">Post Job</a>
+  </div>
+
+  <div class="nav-actions">
+    <div class="nav-avatar" title="{{ user_name }}">
+      {{ user_name[0].upper() if user_name else 'C' }}
+    </div>
+    <a href="{{ url_for('logout') }}" class="btn-ghost" style="font-size:13px; padding:8px 14px;">Logout</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="dashboard-wrap page-enter">
+
+  <!-- HEADER -->
+  <div class="dash-header">
+    <div class="dash-header-title">
+      <div class="dash-greeting">Live Dashboard</div>
+      <h1>{{ user_name or 'Company' }} Dashboard</h1>
+      <p>Manage your job postings and review applicants with bias analysis</p>
+    </div>
+    <div class="dash-header-actions">
+      <a href="{{ url_for('job_desc') }}" class="btn-primary">
+        + Post New Job
+      </a>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row stagger">
+    <div class="stat-card">
+      <div class="stat-icon teal">📋</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ total_jobs }}</div>
+        <div class="stat-label">Jobs Posted</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">👥</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ total_applicants }}</div>
+        <div class="stat-label">Total Applicants</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon violet">📈</div>
+      <div class="stat-content">
+        <div class="stat-value">
+          {% if total_jobs > 0 %}{{ (total_applicants / total_jobs)|round(1) }}{% else %}0{% endif %}
+        </div>
+        <div class="stat-label">Avg per Job</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOBS SECTION -->
+  <div class="section-header">
+    <div class="section-title">Your Job Listings</div>
+    <span class="badge badge-teal">{{ total_jobs }} active</span>
+  </div>
+
+  <div class="jobs-grid stagger">
+
+    {% if jobs %}
+      {% for job in jobs %}
+      <div class="dash-job-card">
+
+        <div class="dash-job-card-top">
+          <div class="dash-job-info">
+            <div class="dash-job-title">{{ job.position }}</div>
+            <div class="dash-job-company">{{ job.company_name }}</div>
+          </div>
+          <div class="dash-job-logo">
+            {{ job.company_name[0].upper() if job.company_name else 'C' }}
+          </div>
+        </div>
+
+        <div class="dash-job-meta">
+          <span class="badge badge-teal">{{ job.employment_type }}</span>
+          <span class="badge badge-violet">{{ job.location }}</span>
+        </div>
+
+        {% if job.salary %}
+        <div class="dash-job-salary">💰 {{ job.salary }}</div>
+        {% endif %}
+
+        <div class="dash-job-applicants">
+          <span>👥</span>
+          <span>{{ job.applicant_count }} applicant{{ 's' if job.applicant_count != 1 else '' }}</span>
+        </div>
+
+        <div class="dash-job-date">
+          Posted {{ job.created_at.strftime('%d %b %Y') if job.created_at else '—' }}
+        </div>
+
+        <div class="dash-job-actions">
+          <a href="{{ url_for('job_view', job_id=job._id) }}" class="btn-view">
+            View Details
+          </a>
+          <form action="{{ url_for('view_applicants') }}" method="POST" style="flex:1;">
+            <input type="hidden" name="job_id" value="{{ job._id }}">
+            <button type="submit" class="btn-applicants">
+              Applicants
+            </button>
+          </form>
+        </div>
+
+      </div>
+      {% endfor %}
+
+    {% else %}
+      <div class="empty-dash">
+        <div class="empty-dash-icon">📭</div>
+        <h3>No jobs posted yet</h3>
+        <p>Post your first listing to start receiving applications.</p>
+        <a href="{{ url_for('job_desc') }}" class="btn-primary" style="margin-top:20px;">
+          + Post Your First Job
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+setTimeout(() => {
+  document.querySelectorAll('.flash-msg').forEach(el => {
+    el.style.transition = 'all 0.4s ease';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(100px)';
+    setTimeout(() => el.remove(), 400);
+  });
+}, 3500);
+</script>
+
+</body>
+</html>

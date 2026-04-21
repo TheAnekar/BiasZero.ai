@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BiasZero | Explore Jobs</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/globals.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flash-container">
+  {% for cat, msg in messages %}
+  <div class="flash-msg {{ cat }}" onclick="this.remove()">
+    {% if cat == 'success' %}✓{% elif cat == 'danger' %}✕{% elif cat == 'warning' %}⚠{% else %}ℹ{% endif %}
+    {{ msg }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a class="nav-brand" href="{{ url_for('landing') }}">
+    <div class="nav-brand-icon">BZ</div>
+    <span class="nav-brand-name"><span class="bias">Bias</span>Zero</span>
+  </a>
+
+  <div class="nav-links">
+    <a href="{{ url_for('landing') }}" class="nav-link active">Jobs</a>
+    <a href="{{ url_for('user_profile') }}" class="nav-link">My Resume</a>
+  </div>
+
+  <div class="nav-actions">
+    <a href="{{ url_for('user_profile') }}" class="nav-avatar" title="{{ user_name }}">
+      {{ user_name[0].upper() if user_name else 'U' }}
+    </a>
+    <a href="{{ url_for('logout') }}" class="btn-ghost" style="font-size:13px; padding:8px 14px;">Logout</a>
+  </div>
+</nav>
+
+<div class="landing-layout">
+
+  <!-- SIDEBAR FILTERS -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Search</div>
+      <form method="GET" action="{{ url_for('landing') }}" id="filterForm">
+        <input type="text" name="search" class="search-input"
+               placeholder="Job title, company…"
+               value="{{ search or '' }}">
+      </form>
+    </div>
+
+    <div class="sidebar-sep"></div>
+
+    <form method="GET" action="{{ url_for('landing') }}" id="sidebarForm">
+      <input type="hidden" name="search" value="{{ search or '' }}">
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Location</div>
+        <input type="text" name="location" class="location-input"
+               placeholder="City or region…"
+               value="{{ request.args.get('location', '') }}">
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Employment Type</div>
+        <select name="type" class="filter-select">
+          <option value="">Any type</option>
+          <option value="Full-time"  {% if request.args.get('type') == 'Full-time' %}selected{% endif %}>Full-time</option>
+          <option value="Part-time"  {% if request.args.get('type') == 'Part-time' %}selected{% endif %}>Part-time</option>
+          <option value="Internship" {% if request.args.get('type') == 'Internship' %}selected{% endif %}>Internship</option>
+          <option value="Contract"   {% if request.args.get('type') == 'Contract' %}selected{% endif %}>Contract</option>
+        </select>
+      </div>
+
+      <div class="sidebar-actions">
+        <button type="submit" class="apply-filter-btn">Apply Filters</button>
+        <a href="{{ url_for('landing') }}" class="clear-filter-btn">Clear All</a>
+      </div>
+    </form>
+
+  </aside>
+
+  <!-- JOB AREA -->
+  <main class="job-area">
+
+    <div class="job-area-header">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <!-- Mobile filter toggle -->
+        <button class="mobile-filter-toggle" onclick="toggleSidebar()">
+          ⚙ Filters
+        </button>
+        <div class="job-count">
+          Showing <strong>{{ jobs|length }}</strong> job{{ 's' if jobs|length != 1 else '' }}
+          {% if search %} for "<strong>{{ search }}</strong>"{% endif %}
+        </div>
+      </div>
+      <a href="{{ url_for('user_profile') }}" class="btn-ghost" style="font-size:13px;">
+        ✏ Edit Resume
+      </a>
+    </div>
+
+    {% if jobs %}
+    <div class="job-grid stagger">
+      {% for job in jobs %}
+      <div class="job-card">
+
+        <div class="job-card-header">
+          <div class="job-card-header-left">
+            <div class="job-title">{{ job.position }}</div>
+            <div class="job-company">{{ job.company_name }}</div>
+          </div>
+          <div class="job-company-logo">
+            {{ job.company_name[0].upper() if job.company_name else 'C' }}
+          </div>
+        </div>
+
+        <div class="job-meta">
+          <span class="job-meta-item">📍 {{ job.location }}</span>
+          <span class="badge badge-teal">{{ job.employment_type }}</span>
+        </div>
+
+        {% if job.salary %}
+        <div class="job-salary">💰 {{ job.salary }}</div>
+        {% endif %}
+
+        <p class="job-snippet">{{ (job.job_description or '')[:120] }}{% if (job.job_description or '')|length > 120 %}…{% endif %}</p>
+
+        <div class="job-card-footer">
+          {% if (job._id ~ '') in applied_jobs %}
+            <button class="apply-btn applied" disabled>✓ Applied</button>
+          {% else %}
+            <form action="{{ url_for('apply_job') }}" method="POST" style="flex:1;">
+              <input type="hidden" name="job_id" value="{{ job._id }}">
+              <button type="submit" class="apply-btn">Quick Apply →</button>
+            </form>
+          {% endif %}
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">🔍</div>
+      <h3>No jobs found</h3>
+      <p>Try adjusting your filters or check back later.</p>
+    </div>
+    {% endif %}
+
+  </main>
+</div>
+
+<script>
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// Sync search between forms
+document.getElementById('filterForm')?.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const searchVal = this.querySelector('[name="search"]').value;
+  const sidebarForm = document.getElementById('sidebarForm');
+  sidebarForm.querySelector('[name="search"]').value = searchVal;
+  sidebarForm.submit();
+});
+
+// Auto-dismiss flash
+setTimeout(() => {
+  document.querySelectorAll('.flash-msg').forEach(el => {
+    el.style.transition = 'all 0.4s ease';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(100px)';
+    setTimeout(() => el.remove(), 400);
+  });
+}, 3500);
+</script>
+
+</body>
+</html>

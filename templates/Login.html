@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BiasZero | Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/globals.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="flash-container">
+  {% for cat, msg in messages %}
+  <div class="flash-msg {{ cat }}" onclick="this.remove()">
+    {% if cat == 'success' %}✓{% elif cat == 'danger' %}✕{% elif cat == 'warning' %}⚠{% else %}ℹ{% endif %}
+    {{ msg }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<div class="login-wrap">
+
+  <!-- LEFT HERO -->
+  <div class="login-hero">
+    <div class="hero-logo">
+      <div class="hero-logo-icon">BZ</div>
+      <div class="hero-brand"><span class="bias">Bias</span>Zero</div>
+    </div>
+
+    <h1 class="hero-headline">
+      Fair Hiring<br>Starts With<br><span class="accent">Zero Bias</span>
+    </h1>
+
+    <p class="hero-sub">
+      An AI-powered platform that detects and eliminates demographic bias in resumes and job applications — creating a level playing field for every candidate.
+    </p>
+
+    <div class="hero-features">
+      <div class="hero-feature">
+        <div class="hero-feature-icon">🔍</div>
+        <div class="hero-feature-text">AI-driven bias detection on resume data</div>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature-icon">🎭</div>
+        <div class="hero-feature-text">Smart anonymization preserving skills data</div>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature-icon">🏢</div>
+        <div class="hero-feature-text">Dual portal for candidates and companies</div>
+      </div>
+      <div class="hero-feature">
+        <div class="hero-feature-icon">📊</div>
+        <div class="hero-feature-text">Real-time bias score with factor analysis</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="login-form-wrap">
+    <div class="login-card">
+
+      <h2 class="login-title" id="formTitle">Welcome back</h2>
+      <p class="login-subtitle" id="formSubtitle">Sign in to your BiasZero account</p>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm" action="/login" method="POST" class="active" style="display:flex; flex-direction:column; gap:16px;">
+
+        <div class="role-tabs">
+          <button type="button" class="role-tab active" onclick="switchRole('login','user', this)">
+            👤 Candidate
+          </button>
+          <button type="button" class="role-tab" onclick="switchRole('login','company', this)">
+            🏢 Company
+          </button>
+        </div>
+
+        <div class="user-fields" id="loginUserFields">
+          <input type="email" name="email" class="form-input" placeholder="Email address" autocomplete="email">
+        </div>
+
+        <div class="company-fields" id="loginCompanyFields" style="display:none; flex-direction:column; gap:12px;">
+          <input type="email" name="hr_email" class="form-input" placeholder="HR Email address">
+          <input type="text"  name="company_code" class="form-input" placeholder="Company Code">
+        </div>
+
+        <input type="hidden" name="LoginRole" id="loginRoleInput" value="User">
+
+        <input type="password" name="password" class="form-input" placeholder="Password" autocomplete="current-password">
+
+        <button type="submit" class="form-submit">Sign In →</button>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="registerForm" action="/register" method="POST" style="display:none; flex-direction:column; gap:16px;">
+
+        <div class="role-tabs">
+          <button type="button" class="role-tab active" onclick="switchRole('register','user', this)">
+            👤 Candidate
+          </button>
+          <button type="button" class="role-tab" onclick="switchRole('register','company', this)">
+            🏢 Company
+          </button>
+        </div>
+
+        <div class="user-fields" id="regUserFields" style="display:flex; flex-direction:column; gap:12px;">
+          <input type="text"  name="name"  class="form-input" placeholder="Full name">
+          <input type="email" name="email" class="form-input" placeholder="Email address" autocomplete="email">
+        </div>
+
+        <div class="company-fields" id="regCompanyFields" style="display:none; flex-direction:column; gap:12px;">
+          <input type="email" name="hr_email"     class="form-input" placeholder="HR Email address">
+          <input type="text"  name="company_code" class="form-input" placeholder="Create Company Code">
+        </div>
+
+        <input type="hidden" name="RegisterRole" id="registerRoleInput" value="User">
+
+        <input type="password" name="password" class="form-input" placeholder="Create password (min 6 chars)" autocomplete="new-password">
+
+        <button type="submit" class="form-submit">Create Account →</button>
+      </form>
+
+      <div class="toggle-link" id="toggleText">
+        Don't have an account?
+        <a onclick="toggleForms()">Register here</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+let isLogin = true;
+
+function toggleForms() {
+  const loginForm    = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+  const title        = document.getElementById('formTitle');
+  const subtitle     = document.getElementById('formSubtitle');
+  const toggleText   = document.getElementById('toggleText');
+
+  isLogin = !isLogin;
+
+  if (isLogin) {
+    loginForm.style.display    = 'flex';
+    registerForm.style.display = 'none';
+    title.textContent           = 'Welcome back';
+    subtitle.textContent        = 'Sign in to your BiasZero account';
+    toggleText.innerHTML        = "Don't have an account? <a onclick=\"toggleForms()\">Register here</a>";
+  } else {
+    loginForm.style.display    = 'none';
+    registerForm.style.display = 'flex';
+    title.textContent           = 'Create account';
+    subtitle.textContent        = 'Join BiasZero today — it\'s free';
+    toggleText.innerHTML        = 'Already have an account? <a onclick="toggleForms()">Sign in</a>';
+  }
+}
+
+function switchRole(formType, role, btn) {
+  const prefix = formType === 'login' ? 'login' : 'reg';
+  const userFields    = document.getElementById(prefix + 'UserFields');
+  const companyFields = document.getElementById(prefix + 'CompanyFields');
+  const roleInput     = document.getElementById(formType + 'RoleInput');
+
+  // Update tab styles
+  btn.closest('.role-tabs').querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  if (role === 'company') {
+    userFields.style.display    = 'none';
+    companyFields.style.display = 'flex';
+    roleInput.value             = 'Company';
+  } else {
+    userFields.style.display    = 'flex';
+    companyFields.style.display = 'none';
+    roleInput.value             = 'User';
+  }
+}
+
+// Auto-dismiss flash messages
+setTimeout(() => {
+  document.querySelectorAll('.flash-msg').forEach(el => el.remove());
+}, 4000);
+</script>
+
+</body>
+</html>
