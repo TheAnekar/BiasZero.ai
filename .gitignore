@@ -1,3 +1,31 @@
+# Virtual environment
 venv/
+.env/
 
-__pychache__/
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Flask stuff
+instance/
+*.log
+
+# Environment variables (VERY important)
+.env
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Database (if local files used)
+*.sqlite3
+
+# Temporary files
+*.swp
+*.bak
